@@ -1,60 +1,86 @@
 import React, { useState, useEffect } from "react";
-import { Alert } from "react-bootstrap"; // react-bootstrap bileşenleri import ediliyor
+import { Table, Alert } from "react-bootstrap"; // react-bootstrap bileşenleri import ediliyor
 import Books from "../Books";
 
-const URL = "https://www.hepsiburada.com/ara?siralama=azalanfiyat&q=";
+const URL = "http://localhost:5000/api/fetch/hepsiburada";
 
-function SearchResults({ query }) {
+function SearchResults({ searchText }) {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\-]/g, "\\$&");
+  }
+
+  function removePunctuation(text) {
+    return text.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, ""); // Noktalama işaretlerini temizler
+  }
+
+  function containsOnlySearchTerms(text, searchTerms) {
+    const cleanedText = removePunctuation(text).toLowerCase();
+
+    let remainingText = cleanedText;
+
+    searchTerms.forEach((term) => {
+      const escapedTerm = escapeRegExp(term.toLowerCase());
+      const regex = new RegExp(escapedTerm, "gi");
+      remainingText = remainingText.replace(regex, "");
+    });
+
+    remainingText = remainingText.trim();
+
+    return remainingText.length === 0;
+  }
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const searchUrl = `${URL}${encodeURIComponent(`${query.title}`)}`;
-        console.log(searchUrl);
-        const response = await fetch(
-          `https://cors-anywhere.herokuapp.com/${searchUrl}`
-        );
-        const data = await response.text();
+        const searchUrl = `${URL}?query=${encodeURIComponent(searchText)}`;
 
-        // HTML içeriğini kontrol edin
-        // console.log(data);
+        const response = await fetch(searchUrl);
+        const data = await response.text();
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(data, "text/html");
 
-        // İçeriği kontrol edin
-        //console.log(doc.documentElement.innerHTML);
+        const productList = doc.querySelectorAll(
+          'li[class^="productListContent"]'
+        );
 
-        // Hedef div'i seçin
-        const productTableDiv = doc.querySelector(".product-list");
-
-        if (!productTableDiv) {
-          console.error("Product table div not found.");
+        if (!productList) {
+          console.error("Product list not found.");
           return;
         }
 
         const results = [];
-        // İçerideki product-cr öğelerini seçin
-        productTableDiv.querySelectorAll(".product-cr").forEach((el) => {
+        productList.forEach((el) => {
           const title =
-            el.querySelector(".name span")?.textContent || "No Title";
+            el.querySelector('[data-test-id="product-card-name"]')
+              ?.textContent || "No Title";
+
           const price =
-            el.querySelector(".price-new .value")?.textContent || "No Price";
+            el.querySelector('[data-test-id="price-current-price"]')
+              ?.textContent || "No Price";
+
           const link =
             el.querySelector(".pr-img-link")?.getAttribute("href") || "#";
 
-          const writer =
-            el.querySelector(".author span").textContent.trim() || "No Writer";
+          const writer = "-";
+          const publisher = "-";
+          // const writer =
+          //   el.querySelector(".author span").textContent.trim() || "No Writer";
 
-          const publisher =
-            el.querySelector(".publisher span")?.textContent || "No Publisher";
+          // const publisher =
+          //   el.querySelector(".publisher span")?.textContent || "No Publisher";
 
-          const imageSrc =
-            el.querySelector(".cover img").getAttribute("src") || "";
-          results.push({ publisher, title, writer, price, link, imageSrc });
+          const imageSrc = el.querySelector("img")?.getAttribute("src") || "";
+
+          const arr = searchText?.split(" ") || [];
+
+          if (price !== "No Price" && containsOnlySearchTerms(title, arr)) {
+            results.push({ publisher, title, writer, price, link, imageSrc });
+          }
         });
 
         setProducts(results);
@@ -67,7 +93,7 @@ function SearchResults({ query }) {
     };
 
     fetchProducts();
-  }, [query]);
+  }, [searchText]);
 
   if (error) return <Alert variant="danger">{error}</Alert>;
 

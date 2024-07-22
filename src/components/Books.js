@@ -5,6 +5,7 @@ export default function Books({ products }) {
     <Table striped bordered hover>
       <thead>
         <tr>
+          <th>No</th>
           <th>Görsel</th>
           <th>Yayınevi</th>
           <th>Kitap Adı</th>
@@ -17,6 +18,7 @@ export default function Books({ products }) {
         {products.length > 0 ? (
           products.map((product, index) => (
             <tr key={index}>
+              <td>{index}</td>
               <td>
                 <img width={40} alt="" src={product.imageSrc}></img>
               </td>

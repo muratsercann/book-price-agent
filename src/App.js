@@ -5,16 +5,16 @@ import SearchResults from "./components/Hepsiburada/SearchResults";
 function App() {
   const [query, setQuery] = useState("");
 
-  const handleSearch = (bookTitle, authorName) => {
+  const handleSearch = (searchText) => {
     setQuery("");
-    setQuery({ title: bookTitle, author: authorName });
+    setQuery(searchText);
   };
 
   return (
     <div className="App">
       <h1>Kitap Arama</h1>
       <SearchForm onSearch={handleSearch} />
-      {query && <SearchResults query={query} />}
+      {query && <SearchResults searchText={query} />}
     </div>
   );
 }

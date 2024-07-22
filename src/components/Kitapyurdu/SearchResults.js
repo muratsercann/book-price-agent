@@ -5,7 +5,7 @@ import Books from "../Books";
 const URL =
   "https://www.kitapyurdu.com/index.php?route=product/search&sort=p.price&order=DESC&limit=100&filter_name=";
 
-function SearchResults({ query }) {
+function SearchResults({ query: searchText }) {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -13,9 +13,7 @@ function SearchResults({ query }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const searchUrl = `${URL}${encodeURIComponent(
-          `${query.title} ${query.author}`
-        )}`;
+        const searchUrl = `${URL}${encodeURIComponent(`${searchText}`)}`;
         console.log(searchUrl);
         const response = await fetch(searchUrl);
         const data = await response.text();
@@ -55,6 +53,7 @@ function SearchResults({ query }) {
 
           const imageSrc =
             el.querySelector(".cover img").getAttribute("src") || "";
+
           results.push({ publisher, title, writer, price, link, imageSrc });
         });
 
@@ -68,7 +67,7 @@ function SearchResults({ query }) {
     };
 
     fetchProducts();
-  }, [query]);
+  }, [searchText]);
 
   if (error) return <Alert variant="danger">{error}</Alert>;
 
