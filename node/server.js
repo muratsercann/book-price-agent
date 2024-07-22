@@ -77,6 +77,31 @@ app.get("/api/fetch/trendyol", async (req, res) => {
   }
 });
 
+app.get("/api/fetch/amazon", async (req, res) => {
+  try {
+    const { query } = req.query; // URL parametresinden arama terimini al
+
+    console.log("amazon search query : ", query);
+
+    // const url = `https://www.amazon.com.tr/s?k=${encodeURIComponent(query)}`;
+    const url =
+      "https://www.amazon.com.tr/s?k=Kitap+Hayvan+%C3%87iftli%C4%9Fi+George+Orwell&__mk_tr_TR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2TX9HNY60R08N&sprefix=kitap+hayvan+%C3%A7iftli%C4%9Fi+george+orwell%2Caps%2C115&ref=nb_sb_noss";
+
+    console.log("url : ", url);
+
+    const { data } = await axios.get(url, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      },
+    });
+    res.send(data);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).send("Error fetching data: " + error.message);
+  }
+});
+
 app.get("/scrape", async (req, res) => {
   // const url = req.query.url; // URL'yi sorgu parametresinden al
 

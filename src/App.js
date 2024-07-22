@@ -5,6 +5,7 @@ import Hepsiburada from "./components/Hepsiburada";
 import Trendyol from "./components/Trendyol";
 import { Tab, Tabs } from "react-bootstrap";
 import "./App.css";
+import Amazon from "./components/Amazon";
 function App() {
   const [query, setQuery] = useState("");
   const [key, setKey] = useState("Trendyol");
@@ -37,7 +38,7 @@ function App() {
           {query && <Hepsiburada searchText={query} />}
         </Tab>
         <Tab eventKey="Amazon" title="Amazon">
-          {query && <Hepsiburada searchText={query} />}
+          {query && <Amazon searchText={query} />}
         </Tab>
         <Tab eventKey="DNR" title="D&R">
           {query && <Hepsiburada searchText={query} />}
