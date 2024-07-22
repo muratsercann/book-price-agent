@@ -1,23 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React, { useState } from "react";
+import SearchForm from "./components/SearchForm";
+// import SearchResults from "./components/Kitapyurdu/SearchResults";
+import SearchResults from "./components/Hepsiburada/SearchResults";
 function App() {
+  const [query, setQuery] = useState("");
+
+  const handleSearch = (bookTitle, authorName) => {
+    setQuery("");
+    setQuery({ title: bookTitle, author: authorName });
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Kitap Arama</h1>
+      <SearchForm onSearch={handleSearch} />
+      {query && <SearchResults query={query} />}
     </div>
   );
 }
