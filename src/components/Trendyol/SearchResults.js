@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Table, Alert } from "react-bootstrap"; // react-bootstrap bileşenleri import ediliyor
 import Books from "../Books";
 
-const URL = "http://localhost:5000/api/fetch/hepsiburada";
+const URL = "http://localhost:5000/api/fetch/trendyol";
 
 function SearchResults({ searchText }) {
   const [products, setProducts] = useState([]);
@@ -44,9 +44,9 @@ function SearchResults({ searchText }) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(data, "text/html");
 
-        const productList = doc.querySelectorAll(
-          'li[class^="productListContent"]'
-        );
+        const productList = doc
+          .querySelector(".prdct-cntnr-wrppr")
+          .querySelectorAll(".p-card-wrppr");
 
         if (!productList) {
           console.error("Product list not found.");
@@ -56,15 +56,14 @@ function SearchResults({ searchText }) {
         const results = [];
         productList.forEach((el) => {
           const title =
-            el.querySelector('[data-test-id="product-card-name"]')
-              ?.textContent || "No Title";
+            (el.querySelector(".prdct-desc-cntnr-name")?.textContent || "") +
+            " " +
+            (el.querySelector(".product-desc-sub-text")?.textContent || "");
 
           const price =
-            el.querySelector('[data-test-id="price-current-price"]')
-              ?.textContent || "No Price";
+            el.querySelector(".prc-box-dscntd")?.textContent || "No Price";
 
-          const link =
-            el.querySelector(".pr-img-link")?.getAttribute("href") || "#";
+          const link = el.querySelector("a")?.getAttribute("href") || "#";
 
           const writer = "-";
           const publisher = "-";
@@ -78,7 +77,20 @@ function SearchResults({ searchText }) {
 
           const arr = searchText?.split(" ") || [];
 
-          if (price !== "No Price" && containsOnlySearchTerms(title, arr)) {
+          if (
+            price !== "No Price" &&
+            containsOnlySearchTerms(title, [
+              ...arr,
+              "Yayın",
+              "Yayınları",
+              "Yayinlari",
+              "Yayin",
+              "Kitap",
+              "Kitabı",
+              "Sayfa",
+              "432",
+            ])
+          ) {
             results.push({ publisher, title, writer, price, link, imageSrc });
           }
         });
