@@ -8,7 +8,13 @@ app.use(cors());
 
 app.get("/api/fetch/kitapyurdu", async (req, res) => {
   try {
-    const url = "https://www.kitapyurdu.com";
+    const { query } = req.query; // URL parametresinden arama terimini al
+
+    const url = `https://www.kitapyurdu.com/index.php?route=product/search&filter_name=${encodeURIComponent(
+      query
+    )}&filter_in_stock=0&filter_in_shelf=1&fuzzy=0&limit=100`;
+
+    console.log("url : ", url);
     const { data } = await axios.get(url, {
       headers: {
         "User-Agent":
@@ -21,6 +27,7 @@ app.get("/api/fetch/kitapyurdu", async (req, res) => {
     res.status(500).send("Error fetching data: " + error.message);
   }
 });
+
 app.get("/api/fetch/hepsiburada", async (req, res) => {
   try {
     const { query } = req.query; // URL parametresinden arama terimini al

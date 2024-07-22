@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import SearchForm from "./components/SearchForm";
-// import SearchResults from "./components/Kitapyurdu/SearchResults";
-import SearchResults from "./components/Hepsiburada/SearchResults";
+import SearchResults from "./components/Kitapyurdu/SearchResults";
+// import SearchResults from "./components/Hepsiburada/SearchResults";
 function App() {
   const [query, setQuery] = useState("");
 

@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Table, Alert } from "react-bootstrap"; // react-bootstrap bileşenleri import ediliyor
 import Books from "../Books";
 
-const URL =
-  "https://www.kitapyurdu.com/index.php?route=product/search&sort=p.price&order=DESC&limit=100&filter_name=";
+const URL = "http://localhost:5000/api/fetch/kitapyurdu";
 
-function SearchResults({ query: searchText }) {
+function SearchResults({ searchText }) {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -13,7 +12,7 @@ function SearchResults({ query: searchText }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const searchUrl = `${URL}${encodeURIComponent(`${searchText}`)}`;
+        const searchUrl = `${URL}?query=${encodeURIComponent(searchText)}`;
         console.log(searchUrl);
         const response = await fetch(searchUrl);
         const data = await response.text();
