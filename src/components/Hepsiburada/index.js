@@ -4,7 +4,7 @@ import Books from "../Books";
 
 const URL = "http://localhost:5000/api/fetch/hepsiburada";
 
-function SearchResults({ searchText }) {
+function Hepsiburada({ searchText }) {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -69,7 +69,7 @@ function SearchResults({ searchText }) {
           const writer = "-";
           const publisher = "-";
           // const writer =
-          //   el.querySelector(".author span").textContent.trim() || "No Writer";
+          //   el.querySelector(".author span")?.textContent.trim() || "No Writer";
 
           // const publisher =
           //   el.querySelector(".publisher span")?.textContent || "No Publisher";
@@ -78,7 +78,11 @@ function SearchResults({ searchText }) {
 
           const arr = searchText?.split(" ") || [];
 
-          if (price !== "No Price" && containsOnlySearchTerms(title, arr)) {
+          // if (price !== "No Price" && containsOnlySearchTerms(title, arr)) {
+          //   results.push({ publisher, title, writer, price, link, imageSrc });
+          // }
+
+          if (price !== "No Price") {
             results.push({ publisher, title, writer, price, link, imageSrc });
           }
         });
@@ -101,4 +105,4 @@ function SearchResults({ searchText }) {
   return <Books products={products} />;
 }
 
-export default SearchResults;
+export default Hepsiburada;

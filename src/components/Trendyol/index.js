@@ -68,7 +68,7 @@ function SearchResults({ searchText }) {
           const writer = "-";
           const publisher = "-";
           // const writer =
-          //   el.querySelector(".author span").textContent.trim() || "No Writer";
+          //   el.querySelector(".author span")?.textContent.trim() || "No Writer";
 
           // const publisher =
           //   el.querySelector(".publisher span")?.textContent || "No Publisher";
@@ -77,20 +77,7 @@ function SearchResults({ searchText }) {
 
           const arr = searchText?.split(" ") || [];
 
-          if (
-            price !== "No Price" &&
-            containsOnlySearchTerms(title, [
-              ...arr,
-              "Yayın",
-              "Yayınları",
-              "Yayinlari",
-              "Yayin",
-              "Kitap",
-              "Kitabı",
-              "Sayfa",
-              "432",
-            ])
-          ) {
+          if (price !== "No Price") {
             results.push({ publisher, title, writer, price, link, imageSrc });
           }
         });

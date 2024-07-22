@@ -4,7 +4,7 @@ import Books from "../Books";
 
 const URL = "http://localhost:5000/api/fetch/kitapyurdu";
 
-function SearchResults({ searchText }) {
+function Kitapyurdu({ searchText }) {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -45,7 +45,7 @@ function SearchResults({ searchText }) {
             el.querySelector(".pr-img-link")?.getAttribute("href") || "#";
 
           const writer =
-            el.querySelector(".author span").textContent.trim() || "No Writer";
+            el.querySelector(".author span")?.textContent.trim() || "No Writer";
 
           const publisher =
             el.querySelector(".publisher span")?.textContent || "No Publisher";
@@ -74,4 +74,4 @@ function SearchResults({ searchText }) {
   return <Books products={products} />;
 }
 
-export default SearchResults;
+export default Kitapyurdu;
