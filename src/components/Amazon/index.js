@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Table, Alert } from "react-bootstrap"; // react-bootstrap bileşenleri import ediliyor
 import Books from "../Books";
 
-const URL = "http://localhost:5000/api/fetch/amazon2";
+const URL = "http://localhost:5000/api/fetch/amazon";
 
 export default function Amazon({ searchText }) {
   const [products, setProducts] = useState([]);
