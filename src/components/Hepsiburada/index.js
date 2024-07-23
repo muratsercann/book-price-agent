@@ -3,7 +3,7 @@ import { Table, Alert } from "react-bootstrap"; // react-bootstrap bileşenleri 
 import Books from "../Books";
 
 const URL = "http://localhost:5000/api/fetch/hepsiburada";
-
+const storeBaseUrl = "https://www.hepsiburada.com";
 function Hepsiburada({ searchText }) {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
@@ -64,7 +64,7 @@ function Hepsiburada({ searchText }) {
               ?.textContent || "No Price";
 
           const link =
-            el.querySelector(".pr-img-link")?.getAttribute("href") || "#";
+            storeBaseUrl + (el.querySelector("a")?.getAttribute("href") || "");
 
           const writer = "-";
           const publisher = "-";

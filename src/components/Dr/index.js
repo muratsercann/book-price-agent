@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Table, Alert } from "react-bootstrap"; // react-bootstrap bileşenleri import ediliyor
 import Books from "../Books";
 
-const URL = "http://localhost:5000/api/fetch/trendyol";
-const storeBaseUrl = "https://www.trendyol.com";
-
-function SearchResults({ searchText }) {
+const URL = "http://localhost:5000/api/fetch/dr";
+const storeBaseUrl = "https://www.dr.com.tr/";
+export default function Dr({ searchText }) {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -45,9 +44,9 @@ function SearchResults({ searchText }) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(data, "text/html");
 
-        const productList = doc
-          .querySelector(".prdct-cntnr-wrppr")
-          .querySelectorAll(".p-card-wrppr");
+        const productList = doc.querySelectorAll(
+          "div.facet__products .prd.js-prd-item"
+        );
 
         if (!productList) {
           console.error("Product list not found.");
@@ -56,28 +55,27 @@ function SearchResults({ searchText }) {
 
         const results = [];
         productList.forEach((el) => {
-          const title =
-            (el.querySelector(".prdct-desc-cntnr-name")?.textContent || "") +
-            " " +
-            (el.querySelector(".product-desc-sub-text")?.textContent || "");
+          const product_info = JSON.parse(el?.getAttribute("data-gtm") || "{}");
 
-          const price =
-            el.querySelector(".prc-box-dscntd")?.textContent || "No Price";
+          const title = product_info?.item_name || "-";
+
+          const price = product_info?.price || "-";
 
           const link =
-            storeBaseUrl + (el.querySelector("a")?.getAttribute("href") || "");
+            storeBaseUrl +
+            (el.querySelector(".product-img a")?.getAttribute("href") || "");
 
-          const writer = "-";
-          // const publisher = "-";
+          const writer = product_info?.author || "-";
+          const publisher = product_info?.publisher || "-";
           // const writer =
           //   el.querySelector(".author span")?.textContent.trim() || "No Writer";
 
-          const publisher =
-            el.querySelector(".prdct-desc-cntnr-ttl")?.textContent ||
-            "No Publisher";
+          // const publisher =
+          //   el.querySelector(".publisher span")?.textContent || "No Publisher";
 
           const imageSrc =
-            el.querySelector("img.p-card-img")?.getAttribute("src") || "";
+            el.querySelector(".product-img img")?.getAttribute("data-src") ||
+            "";
 
           const arr = searchText?.split(" ") || [];
 
@@ -103,5 +101,3 @@ function SearchResults({ searchText }) {
   if (loading) return <>Searching..</>;
   return <Books products={products} />;
 }
-
-export default SearchResults;

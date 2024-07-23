@@ -60,7 +60,7 @@ app.get("/api/fetch/trendyol", async (req, res) => {
       query
     )}&qt=${encodeURIComponent(query)}&st=${encodeURIComponent(
       query
-    )}&os=1&pi=1&sst=PRICE_BY_DESC&attr=1071|1203195`;
+    )}&os=1&pi=1&sst=PRICE_BY_DESC`;
 
     console.log("url : ", url);
 
@@ -95,6 +95,33 @@ app.get("/api/fetch/amazon", async (req, res) => {
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
       },
     });
+    res.send(data);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).send("Error fetching data: " + error.message);
+  }
+});
+
+app.get("/api/fetch/dr", async (req, res) => {
+  try {
+    const { query } = req.query; // URL parametresinden arama terimini al
+
+    console.log("dr search query : ", query);
+
+    // const url = `https://www.amazon.com.tr/s?k=${encodeURIComponent(query)}`;
+    const url = `https://www.dr.com.tr/search?q=${encodeURIComponent(
+      query
+    )}&redirect=search&SortOrder=1&SortType=2`;
+
+    console.log("D&R url : ", url);
+
+    const { data } = await axios.get(url, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      },
+    });
+
     res.send(data);
   } catch (error) {
     console.error("Error fetching data:", error);
