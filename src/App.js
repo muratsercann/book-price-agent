@@ -10,10 +10,11 @@ import Dr from "./components/Dr";
 function App() {
   const [query, setQuery] = useState("");
   const [key, setKey] = useState("Trendyol");
+  const [sortOption, setSortOption] = useState("recommended");
 
-  const handleSearch = (searchText) => {
-    setQuery("");
+  const handleSearch = (searchText, sortOption) => {
     setQuery(searchText);
+    setSortOption(sortOption);
   };
 
   return (
@@ -30,20 +31,20 @@ function App() {
         className="mb-3"
       >
         <Tab eventKey="Kitapyurdu" title="Kitapyurdu">
-          {query && <Kitapyurdu searchText={query} />}
+          {query && <Kitapyurdu searchText={query} sortOption={sortOption} />}
         </Tab>
         <Tab eventKey="Trendyol" title="Trendyol">
-          {query && <Trendyol searchText={query} />}
+          {query && <Trendyol searchText={query} sortOption={sortOption} />}
         </Tab>
         <Tab eventKey="Hepsiburada" title="Hepsiburada">
-          {query && <Hepsiburada searchText={query} />}
+          {query && <Hepsiburada searchText={query} sortOption={sortOption} />}
         </Tab>
         <Tab eventKey="Amazon" title="Amazon">
           {/* {query && <Amazon searchText={query} />} */}
           No Content
         </Tab>
         <Tab eventKey="DNR" title="D&R">
-          {query && <Dr searchText={query} />}
+          {query && <Dr searchText={query} sortOption={sortOption} />}
         </Tab>
       </Tabs>
     </div>

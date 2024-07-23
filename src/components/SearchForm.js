@@ -6,9 +6,11 @@ function SearchForm({ onSearch }) {
     "Kürk Mantolu Madonna Sabahattin Ali"
   );
 
+  const [sortOption, setSortOption] = useState("recommended");
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSearch(searchText);
+    onSearch(searchText, sortOption);
   };
 
   return (
@@ -16,7 +18,7 @@ function SearchForm({ onSearch }) {
       <Row className="justify-content-center">
         <Col md={8} lg={6}>
           <Form onSubmit={handleSubmit}>
-            <InputGroup>
+            <InputGroup className="mb-3">
               <Form.Control
                 type="text"
                 placeholder="Aranacak Öğe Giriniz"
@@ -28,6 +30,17 @@ function SearchForm({ onSearch }) {
                 Ara
               </Button>
             </InputGroup>
+            <Form.Select
+              aria-label="Sıralama Seçeneği"
+              value={sortOption}
+              onChange={(e) => {
+                onSearch(searchText, e.target.value);
+                setSortOption(e.target.value);
+              }}
+            >
+              <option value="recommended">Önerilen</option>
+              <option value="highPrice">Yüksek Fiyat</option>
+            </Form.Select>
           </Form>
         </Col>
       </Row>

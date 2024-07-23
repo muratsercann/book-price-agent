@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Table, Alert } from "react-bootstrap"; // react-bootstrap bileşenleri import ediliyor
 import Books from "../Books";
 
-const URL = "http://localhost:5000/api/fetch/trendyol";
+const URL = "http://localhost:5000/api/fetch/trendyol2";
 const storeBaseUrl = "https://www.trendyol.com";
 
-function SearchResults({ searchText }) {
+export default function SearchResults({ searchText, sortOption }) {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -37,7 +37,9 @@ function SearchResults({ searchText }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const searchUrl = `${URL}?query=${encodeURIComponent(searchText)}`;
+        const searchUrl = `${URL}?query=${encodeURIComponent(
+          searchText
+        )}&sortOption=${encodeURIComponent(sortOption)}`;
 
         const response = await fetch(searchUrl);
         const data = await response.text();
@@ -96,12 +98,10 @@ function SearchResults({ searchText }) {
     };
 
     fetchProducts();
-  }, [searchText]);
+  }, [searchText, sortOption]);
 
   if (error) return <Alert variant="danger">{error}</Alert>;
 
   if (loading) return <>Searching..</>;
   return <Books products={products} />;
 }
-
-export default SearchResults;

@@ -4,7 +4,7 @@ import Books from "../Books";
 
 const URL = "http://localhost:5000/api/fetch/hepsiburada";
 const storeBaseUrl = "https://www.hepsiburada.com";
-function Hepsiburada({ searchText }) {
+function Hepsiburada({ searchText, sortOption }) {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -36,7 +36,9 @@ function Hepsiburada({ searchText }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const searchUrl = `${URL}?query=${encodeURIComponent(searchText)}`;
+        const searchUrl = `${URL}?query=${encodeURIComponent(
+          searchText
+        )}&sortOption=${encodeURIComponent(sortOption)}`;
 
         const response = await fetch(searchUrl);
         const data = await response.text();
@@ -97,7 +99,7 @@ function Hepsiburada({ searchText }) {
     };
 
     fetchProducts();
-  }, [searchText]);
+  }, [searchText, sortOption]);
 
   if (error) return <Alert variant="danger">{error}</Alert>;
 

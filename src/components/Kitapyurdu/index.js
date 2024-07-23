@@ -4,7 +4,7 @@ import Books from "../Books";
 
 const URL = "http://localhost:5000/api/fetch/kitapyurdu";
 
-function Kitapyurdu({ searchText }) {
+function Kitapyurdu({ searchText, sortOption }) {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -12,21 +12,15 @@ function Kitapyurdu({ searchText }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const searchUrl = `${URL}?query=${encodeURIComponent(searchText)}`;
-        console.log(searchUrl);
+        const searchUrl = `${URL}?query=${encodeURIComponent(
+          searchText
+        )}&sortOption=${encodeURIComponent(sortOption)}`;
         const response = await fetch(searchUrl);
         const data = await response.text();
-
-        // HTML içeriğini kontrol edin
-        // console.log(data);
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(data, "text/html");
 
-        // İçeriği kontrol edin
-        //console.log(doc.documentElement.innerHTML);
-
-        // Hedef div'i seçin
         const productTableDiv = doc.querySelector("#product-table");
 
         if (!productTableDiv) {
@@ -66,7 +60,7 @@ function Kitapyurdu({ searchText }) {
     };
 
     fetchProducts();
-  }, [searchText]);
+  }, [searchText, sortOption]);
 
   if (error) return <Alert variant="danger">{error}</Alert>;
 
