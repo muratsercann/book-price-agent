@@ -153,6 +153,37 @@ app.get("/api/fetch/dr", async (req, res) => {
   }
 });
 
+app.get("/api/fetch/amazon2", async (req, res) => {
+  try {
+    const { query, sortOption } = req.query;
+
+    let sortQuery = "";
+    let ref = "nb_sb_noss";
+    if (sortOption === "highPrice") {
+      sortQuery = "s=price-desc-rank";
+      ref = "sr_st_price-desc-rank";
+    }
+
+    const url = `https://www.amazon.com.tr/s?k=${query}&ref=${ref}`;
+
+    // Puppeteer ile tarayıcıyı başlat ve sayfayı aç
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto(url, { waitUntil: "networkidle2" });
+
+    // Sayfanın HTML içeriğini al
+    const htmlContent = await page.content();
+
+    await browser.close();
+
+    // HTML içeriğini yanıt olarak gönder
+    res.send(htmlContent);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).send("Error fetching data: " + error.message);
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });

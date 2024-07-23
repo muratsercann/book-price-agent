@@ -94,6 +94,8 @@ export default function Dr({ searchText, sortOption }) {
         setLoading(false);
       }
     };
+
+    fetchProducts();
   }, [searchText, sortOption]);
 
   if (error) return <Alert variant="danger">{error}</Alert>;

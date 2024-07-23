@@ -31,20 +31,27 @@ function App() {
         className="mb-3"
       >
         <Tab eventKey="Kitapyurdu" title="Kitapyurdu">
-          {query && <Kitapyurdu searchText={query} sortOption={sortOption} />}
+          {query && sortOption && (
+            <Kitapyurdu searchText={query} sortOption={sortOption} />
+          )}
         </Tab>
         <Tab eventKey="Trendyol" title="Trendyol">
-          {query && <Trendyol searchText={query} sortOption={sortOption} />}
+          {query && sortOption && (
+            <Trendyol searchText={query} sortOption={sortOption} />
+          )}
         </Tab>
         <Tab eventKey="Hepsiburada" title="Hepsiburada">
-          {query && <Hepsiburada searchText={query} sortOption={sortOption} />}
+          {query && sortOption && (
+            <Hepsiburada searchText={query} sortOption={sortOption} />
+          )}
         </Tab>
         <Tab eventKey="Amazon" title="Amazon">
-          {/* {query && <Amazon searchText={query} />} */}
-          No Content
+          {query && sortOption && <Amazon searchText={query} />}
         </Tab>
         <Tab eventKey="DNR" title="D&R">
-          {query && <Dr searchText={query} sortOption={sortOption} />}
+          {query && sortOption && (
+            <Dr searchText={query} sortOption={sortOption} />
+          )}
         </Tab>
       </Tabs>
     </div>

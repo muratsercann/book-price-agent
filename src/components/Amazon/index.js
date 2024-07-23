@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Table, Alert } from "react-bootstrap"; // react-bootstrap bileşenleri import ediliyor
 import Books from "../Books";
 
-const URL = "http://localhost:5000/api/fetch/amazon";
+const URL = "http://localhost:5000/api/fetch/amazon2";
 
 export default function Amazon({ searchText }) {
   const [products, setProducts] = useState([]);
@@ -59,9 +59,10 @@ export default function Amazon({ searchText }) {
             el.querySelector('[data-cy="title-recipe"]')?.textContent ||
             "No Title";
 
-          const price =
+          let price =
             el.querySelector('[data-cy="price-recipe"] .a-price-whole')
               ?.textContent || "No Price";
+          if (price !== "No Price") price += "00";
 
           const link =
             el
