@@ -3,6 +3,7 @@ import { Table, Alert } from "react-bootstrap"; // react-bootstrap bileşenleri 
 import Books from "../Books";
 
 const URL = "http://localhost:5000/api/fetch/amazon";
+const storeBaseUrl = "https://www.amazon.com.tr";
 
 export default function Amazon({ searchText }) {
   const [products, setProducts] = useState([]);
@@ -65,9 +66,10 @@ export default function Amazon({ searchText }) {
           if (price !== "No Price") price += "00";
 
           const link =
-            el
+            storeBaseUrl +
+            (el
               .querySelector('[data-cy="title-recipe"] h2 a')
-              ?.getAttribute("href") || "#";
+              ?.getAttribute("href") || "");
 
           const writer = "-";
           const publisher = "-";
