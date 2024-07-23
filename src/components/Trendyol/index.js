@@ -37,6 +37,8 @@ export default function SearchResults({ searchText, sortOption }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setLoading(true);
+
         const searchUrl = `${URL}?query=${encodeURIComponent(
           searchText
         )}&sortOption=${encodeURIComponent(sortOption)}`;
@@ -49,13 +51,14 @@ export default function SearchResults({ searchText, sortOption }) {
 
         const productList = doc
           .querySelector(".prdct-cntnr-wrppr")
-          .querySelectorAll(".p-card-wrppr");
+          ?.querySelectorAll(".p-card-wrppr");
 
         if (!productList) {
-          console.error("Product list not found.");
+          setProducts([]);
+          console.log("No Product found !");
+          setLoading(false);
           return;
         }
-
         const results = [];
         productList.forEach((el) => {
           const title =
@@ -89,10 +92,10 @@ export default function SearchResults({ searchText, sortOption }) {
         });
 
         setProducts(results);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching products:", error);
-        setError("An error occurred while fetching products.");
+        setError("An error occurred while fetching products :\n" + error);
+      } finally {
         setLoading(false);
       }
     };

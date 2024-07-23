@@ -36,6 +36,8 @@ export default function Dr({ searchText, sortOption }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setLoading(true);
+
         const searchUrl = `${URL}?query=${encodeURIComponent(
           searchText
         )}&sortOption=${encodeURIComponent(sortOption)}`;
@@ -51,10 +53,11 @@ export default function Dr({ searchText, sortOption }) {
         );
 
         if (!productList) {
-          console.error("Product list not found.");
+          setProducts([]);
+          console.log("No Product found !");
+          setLoading(false);
           return;
         }
-
         const results = [];
         productList.forEach((el) => {
           const product_info = JSON.parse(el?.getAttribute("data-gtm") || "{}");
@@ -87,10 +90,10 @@ export default function Dr({ searchText, sortOption }) {
         });
 
         setProducts(results);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching products:", error);
         setError("An error occurred while fetching products.");
+      } finally {
         setLoading(false);
       }
     };

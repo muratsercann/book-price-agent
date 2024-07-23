@@ -37,6 +37,7 @@ export default function Amazon({ searchText }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setLoading(true);
         const searchUrl = `${URL}?query=${encodeURIComponent(searchText)}`;
 
         const response = await fetch(searchUrl);
@@ -50,7 +51,9 @@ export default function Amazon({ searchText }) {
           .querySelectorAll('[data-component-type="s-search-result"]');
 
         if (!productList) {
-          console.error("Product list not found.");
+          setProducts([]);
+          console.log("No Product found !");
+          setLoading(false);
           return;
         }
 
@@ -90,10 +93,10 @@ export default function Amazon({ searchText }) {
         });
 
         setProducts(results);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching products:", error);
         setError("An error occurred while fetching products.");
+      } finally {
         setLoading(false);
       }
     };

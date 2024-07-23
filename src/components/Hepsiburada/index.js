@@ -36,6 +36,8 @@ function Hepsiburada({ searchText, sortOption }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setLoading(true);
+
         const searchUrl = `${URL}?query=${encodeURIComponent(
           searchText
         )}&sortOption=${encodeURIComponent(sortOption)}`;
@@ -51,7 +53,9 @@ function Hepsiburada({ searchText, sortOption }) {
         );
 
         if (!productList) {
-          console.error("Product list not found.");
+          setProducts([]);
+          console.log("No Product found !");
+          setLoading(false);
           return;
         }
 
@@ -90,10 +94,10 @@ function Hepsiburada({ searchText, sortOption }) {
         });
 
         setProducts(results);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching products:", error);
         setError("An error occurred while fetching products.");
+      } finally {
         setLoading(false);
       }
     };

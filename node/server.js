@@ -6,12 +6,28 @@ const app = express();
 const port = 5000;
 app.use(cors());
 
+async function getPageHtml(url, selector = null) {
+  const browser = await puppeteer.launch({ headless: true });
+  const page = await browser.newPage();
+  await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
+
+  if (selector) {
+    //todo msercan : check if not found...
+    await page.waitForSelector(selector, { timeout: 30000 });
+  }
+  // await page.goto(url, { waitUntil: "networkidle2", timeout: 2000 });
+  await page.setViewport({ width: 1080, height: 1024 });
+
+  // Sayfanın HTML içeriğini al
+  const htmlContent = await page.content();
+  await browser.close();
+
+  return htmlContent;
+}
+
 app.get("/api/fetch/kitapyurdu", async (req, res) => {
   try {
     const { query, sortOption } = req.query || {};
-
-    console.log("Kitap yurdu query : " + query);
-    console.log("Kitap yurdu sortOption : " + sortOption);
 
     let sortQuery = "";
     if (sortOption === "highPrice") {
@@ -24,13 +40,10 @@ app.get("/api/fetch/kitapyurdu", async (req, res) => {
 
     console.log("url : " + url);
 
-    const { data } = await axios.get(url, {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-      },
-    });
-    res.send(data);
+    // const htmlContent = await getPageHtml(url, "#product-table");
+    const htmlContent = await getPageHtml(url, ".search-page");
+    // HTML içeriğini yanıt olarak gönder
+    res.send(htmlContent);
   } catch (error) {
     console.error("Error fetching data:", error);
     res.status(500).send("Error fetching data: " + error.message);
@@ -80,15 +93,8 @@ app.get("/api/fetch/trendyol", async (req, res) => {
 
     console.log("url : ", url);
 
-    // Puppeteer ile tarayıcıyı başlat ve sayfayı aç
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.goto(url, { waitUntil: "networkidle2" });
-
-    // Sayfanın HTML içeriğini al
-    const htmlContent = await page.content();
-
-    await browser.close();
+    // const htmlContent = await getPageHtml(url, ".prdct-cntnr-wrppr");
+    const htmlContent = await getPageHtml(url, "#search-app");
 
     // HTML içeriğini yanıt olarak gönder
     res.send(htmlContent);
@@ -107,21 +113,18 @@ app.get("/api/fetch/dr", async (req, res) => {
       sortQuery = "&SortOrder=1&SortType=2";
     }
 
-    // const url = `https://www.amazon.com.tr/s?k=${encodeURIComponent(query)}`;
     const url = `https://www.dr.com.tr/search?q=${encodeURIComponent(
       query
     )}&redirect=search${sortQuery}`;
 
     console.log("D&R url : ", url);
 
-    const { data } = await axios.get(url, {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-      },
-    });
-
-    res.send(data);
+    const htmlContent = await getPageHtml(
+      url,
+      "div.facet__products .prd.js-prd-item"
+    );
+    // HTML içeriğini yanıt olarak gönder
+    res.send(htmlContent);
   } catch (error) {
     console.error("Error fetching data:", error);
     res.status(500).send("Error fetching data: " + error.message);
@@ -135,22 +138,16 @@ app.get("/api/fetch/amazon", async (req, res) => {
     let sortQuery = "";
     let ref = "nb_sb_noss";
     if (sortOption === "highPrice") {
-      sortQuery = "s=price-desc-rank";
+      sortQuery = "&s=price-desc-rank";
       ref = "sr_st_price-desc-rank";
     }
 
-    const url = `https://www.amazon.com.tr/s?k=${query}&ref=${ref}`;
+    const url = `https://www.amazon.com.tr/s?k=${query}&ref=${ref}${sortQuery}`;
 
-    // Puppeteer ile tarayıcıyı başlat ve sayfayı aç
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.goto(url, { waitUntil: "networkidle2" });
-
-    // Sayfanın HTML içeriğini al
-    const htmlContent = await page.content();
-
-    await browser.close();
-
+    const htmlContent = await getPageHtml(
+      url,
+      ".s-main-slot.s-result-list.s-search-results.sg-row"
+    );
     // HTML içeriğini yanıt olarak gönder
     res.send(htmlContent);
   } catch (error) {

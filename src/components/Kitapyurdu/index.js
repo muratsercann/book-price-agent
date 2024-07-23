@@ -12,6 +12,7 @@ function Kitapyurdu({ searchText, sortOption }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setLoading(true);
         const searchUrl = `${URL}?query=${encodeURIComponent(
           searchText
         )}&sortOption=${encodeURIComponent(sortOption)}`;
@@ -24,7 +25,9 @@ function Kitapyurdu({ searchText, sortOption }) {
         const productTableDiv = doc.querySelector("#product-table");
 
         if (!productTableDiv) {
-          console.error("Product table div not found.");
+          setProducts([]);
+          console.log("No Product found !");
+          setLoading(false);
           return;
         }
 
@@ -51,10 +54,10 @@ function Kitapyurdu({ searchText, sortOption }) {
         });
 
         setProducts(results);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching products:", error);
         setError("An error occurred while fetching products.");
+      } finally {
         setLoading(false);
       }
     };
