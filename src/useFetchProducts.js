@@ -7,14 +7,27 @@ const useFetchProducts = (store, searchText, sortOption) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchKitapyurdu = async () => {
-      return utils.getKitapYurduProducts(searchText, sortOption);
-    };
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const response = await fetchKitapyurdu();
-        console.log("response : ", response);
+        const response = await (async () => {
+          switch (store) {
+            case "kitapyurdu":
+              return await utils.getKitapYurduProducts(searchText, sortOption);
+            case "amazon":
+              return await utils.getAmazonProducts(searchText);
+            case "dr":
+              return await utils.getDrproducts(searchText, sortOption);
+            case "trendyol":
+              return await utils.getTrendyolProducts(searchText, sortOption);
+            case "hepsiburada":
+              return await utils.getHepsiburadaProducts(searchText, sortOption);
+            default:
+              break;
+          }
+        })();
+
+        console.log(store + "_response : ", response);
         if (response.ok) {
           setProducts(response.data);
         } else {
@@ -28,7 +41,7 @@ const useFetchProducts = (store, searchText, sortOption) => {
       }
     };
     fetchProducts();
-  }, [searchText, sortOption]);
+  }, [searchText, sortOption, store]);
 
   return { products, loading, error };
 };

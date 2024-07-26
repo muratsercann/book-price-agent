@@ -7,8 +7,28 @@ const port = 5000;
 app.use(cors());
 
 async function getPageHtml(url, selector = null) {
-  const browser = await puppeteer.launch({ headless: true });
+  const start = new Date();
+  const browser = await puppeteer.launch({
+    headless: true,
+  });
   const page = await browser.newPage();
+
+  //await page.setRequestInterception(true);
+
+  // page.on("request", (request) => {
+  //   const url = request.url();
+  //   if (
+  //     url.endsWith(".jpg") ||
+  //     url.endsWith(".png") ||
+  //     url.includes("/static/")
+  //   ) {
+  //     // Resimleri ve diğer medya dosyalarını engelle
+  //     request.abort();
+  //   } else {
+  //     request.continue();
+  //   }
+  // });
+
   await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
 
   if (selector) {
@@ -22,6 +42,9 @@ async function getPageHtml(url, selector = null) {
   const htmlContent = await page.content();
   await browser.close();
 
+  const end = new Date();
+  const duration = end - start; // Millisaniye cinsinden süre
+  console.log(`Çalışma süresi: ${duration} ms`);
   return htmlContent;
 }
 
@@ -38,7 +61,7 @@ app.get("/api/fetch/kitapyurdu", async (req, res) => {
       query
     )}&filter_in_stock=0&filter_in_shelf=1&fuzzy=0&limit=100${sortQuery}`;
 
-    console.log("url : " + url);
+    //console.log("url : " + url);
 
     // const htmlContent = await getPageHtml(url, "#product-table");
     const htmlContent = await getPageHtml(url, ".search-page");
@@ -91,7 +114,7 @@ app.get("/api/fetch/trendyol", async (req, res) => {
       query
     )}&os=1&pi=1${sortQuery}`;
 
-    console.log("url : ", url);
+    //console.log("url : ", url);
 
     // const htmlContent = await getPageHtml(url, ".prdct-cntnr-wrppr");
     const htmlContent = await getPageHtml(url, "#search-app");
@@ -117,7 +140,7 @@ app.get("/api/fetch/dr", async (req, res) => {
       query
     )}&redirect=search${sortQuery}`;
 
-    console.log("D&R url : ", url);
+    //console.log("D&R url : ", url);
 
     const htmlContent = await getPageHtml(
       url,
