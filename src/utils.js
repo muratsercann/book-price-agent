@@ -20,6 +20,7 @@ export const getKitapYurduProducts = async (searchText, sortOption) => {
     const results = [];
     // İçerideki product-cr öğelerini seçin
     productTableDiv.querySelectorAll(".product-cr").forEach((el) => {
+      const store = "kitapyurdu";
       const title = el.querySelector(".name span")?.textContent || "No Title";
       const price =
         el.querySelector(".price-new .value")?.textContent || "No Price";
@@ -34,7 +35,7 @@ export const getKitapYurduProducts = async (searchText, sortOption) => {
 
       const imageSrc = el.querySelector(".cover img").getAttribute("src") || "";
 
-      results.push({ publisher, title, writer, price, link, imageSrc });
+      results.push({ store, publisher, title, writer, price, link, imageSrc });
     });
 
     return { ok: true, data: results };
@@ -67,6 +68,7 @@ export const getAmazonProducts = async (searchText) => {
 
     const results = [];
     productList.forEach((el) => {
+      const store = "amazon";
       const title =
         el.querySelector('[data-cy="title-recipe"]')?.textContent || "No Title";
 
@@ -94,7 +96,15 @@ export const getAmazonProducts = async (searchText) => {
       const arr = searchText?.split(" ") || [];
 
       if (price !== "No Price") {
-        results.push({ publisher, title, writer, price, link, imageSrc });
+        results.push({
+          store,
+          publisher,
+          title,
+          writer,
+          price,
+          link,
+          imageSrc,
+        });
       }
     });
 
@@ -130,6 +140,8 @@ export const getDrproducts = async (searchText, sortOption) => {
     productList.forEach((el) => {
       const product_info = JSON.parse(el?.getAttribute("data-gtm") || "{}");
 
+      const store = "dr";
+
       const title = product_info?.item_name || "-";
 
       const price = product_info?.price || "-";
@@ -152,7 +164,15 @@ export const getDrproducts = async (searchText, sortOption) => {
       const arr = searchText?.split(" ") || [];
 
       if (price !== "No Price") {
-        results.push({ publisher, title, writer, price, link, imageSrc });
+        results.push({
+          store,
+          publisher,
+          title,
+          writer,
+          price,
+          link,
+          imageSrc,
+        });
       }
     });
 
@@ -185,6 +205,7 @@ export const getHepsiburadaProducts = async (searchText, sortOption) => {
 
     const results = [];
     productList.forEach((el) => {
+      const store = "hepsiburada";
       const title =
         el.querySelector('[data-test-id="product-card-name"]')?.textContent ||
         "No Title";
@@ -213,7 +234,15 @@ export const getHepsiburadaProducts = async (searchText, sortOption) => {
       // }
 
       if (price !== "No Price") {
-        results.push({ publisher, title, writer, price, link, imageSrc });
+        results.push({
+          store,
+          publisher,
+          title,
+          writer,
+          price,
+          link,
+          imageSrc,
+        });
       }
     });
 
@@ -247,6 +276,7 @@ export const getTrendyolProducts = async (searchText, sortOption) => {
     }
     const results = [];
     productList.forEach((el) => {
+      const store = "trendyol";
       const title =
         (el.querySelector(".prdct-desc-cntnr-name")?.textContent || "") +
         " " +
@@ -273,7 +303,15 @@ export const getTrendyolProducts = async (searchText, sortOption) => {
       const arr = searchText?.split(" ") || [];
 
       if (price !== "No Price") {
-        results.push({ publisher, title, writer, price, link, imageSrc });
+        results.push({
+          store,
+          publisher,
+          title,
+          writer,
+          price,
+          link,
+          imageSrc,
+        });
       }
     });
 
