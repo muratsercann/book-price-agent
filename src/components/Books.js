@@ -3,6 +3,19 @@ import { Table } from "react-bootstrap";
 export default function Books({ products }) {
   let totalStr = "";
 
+  function formatPrice(price) {
+    let formattedPrice = price;
+
+    if (formattedPrice.indexOf(",") < 0) formattedPrice += ",00";
+    return formattedPrice + " TL";
+    // return price.toLocaleString("tr-TR", {
+    //   style: "currency",
+    //   currency: "TRY",
+    //   minimumFractionDigits: 2,
+    //   maximumFractionDigits: 2,
+    // });
+  }
+
   if (products.length > 0) {
     totalStr = (
       <span>
@@ -27,6 +40,7 @@ export default function Books({ products }) {
           <thead>
             <tr>
               <th>No</th>
+              <th>Mağaza</th>
               <th>Görsel</th>
               <th>Yayınevi</th>
               <th>Kitap Adı</th>
@@ -40,13 +54,14 @@ export default function Books({ products }) {
               products.map((product, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
+                  <td>{product.store}</td>
                   <td>
                     <img width={40} alt="" src={product.imageSrc}></img>
                   </td>
                   <td>{product.publisher}</td>
                   <td>{product.title}</td>
                   <td>{product.writer}</td>
-                  <td>{product.price}</td>
+                  <td>{formatPrice(product.price)}</td>
                   <td>
                     <a
                       href={product.link}

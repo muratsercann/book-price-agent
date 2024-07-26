@@ -22,8 +22,11 @@ export const getKitapYurduProducts = async (searchText, sortOption) => {
     productTableDiv.querySelectorAll(".product-cr").forEach((el) => {
       const store = "kitapyurdu";
       const title = el.querySelector(".name span")?.textContent || "No Title";
-      const price =
+      let price =
         el.querySelector(".price-new .value")?.textContent || "No Price";
+      if (price !== "No Price")
+        price = price.replace("TL", "").replaceAll(" ", "");
+
       const link =
         el.querySelector(".pr-img-link")?.getAttribute("href") || "#";
 
@@ -75,7 +78,11 @@ export const getAmazonProducts = async (searchText) => {
       let price =
         el.querySelector('[data-cy="price-recipe"] .a-price-whole')
           ?.textContent || "No Price";
-      if (price !== "No Price") price += "00";
+
+      if (price !== "No Price") {
+        price += "00";
+        price = price.replace("TL", "").replaceAll(" ", "");
+      }
 
       const link =
         storeBaseUrl +
@@ -144,7 +151,9 @@ export const getDrproducts = async (searchText, sortOption) => {
 
       const title = product_info?.item_name || "-";
 
-      const price = product_info?.price || "-";
+      let price = product_info?.price || "No Price";
+      if (price !== "No Price")
+        price = price.replace("TL", "").replaceAll(" ", "").replace(".", ","); //for only dr.
 
       const link =
         storeBaseUrl +
@@ -210,9 +219,12 @@ export const getHepsiburadaProducts = async (searchText, sortOption) => {
         el.querySelector('[data-test-id="product-card-name"]')?.textContent ||
         "No Title";
 
-      const price =
+      let price =
         el.querySelector('[data-test-id="price-current-price"]')?.textContent ||
         "No Price";
+
+      if (price !== "No Price")
+        price = price.replace("TL", "").replaceAll(" ", "");
 
       const link =
         storeBaseUrl + (el.querySelector("a")?.getAttribute("href") || "");
@@ -282,8 +294,10 @@ export const getTrendyolProducts = async (searchText, sortOption) => {
         " " +
         (el.querySelector(".product-desc-sub-text")?.textContent || "");
 
-      const price =
+      let price =
         el.querySelector(".prc-box-dscntd")?.textContent || "No Price";
+      if (price !== "No Price")
+        price = price.replace("TL", "").replaceAll(" ", "");
 
       const link =
         storeBaseUrl + (el.querySelector("a")?.getAttribute("href") || "");

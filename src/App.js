@@ -21,6 +21,7 @@ function App() {
     // setSortOption(sortOption);
     // API çağrılarını paralel olarak başlatın
     setProducts([]);
+    console.log("sort option : " + sortOption);
     console.log("fetching producs...");
     const kitapyurduPromise = utils.getKitapYurduProducts(
       searchText,
@@ -113,6 +114,17 @@ function App() {
     return result;
   };
 
+  const parsePrice = (priceString) => {
+    const price = priceString
+      .replaceAll(" ", "")
+      .replaceAll("TL", "")
+      .replaceAll(".", "")
+      .replaceAll(",", ".");
+
+    const result = parseFloat(price);
+    return result;
+  };
+
   return (
     <div className="App">
       <div style={{ fontSize: "53px" }}>Kitap Arama</div>
@@ -120,36 +132,13 @@ function App() {
         <SearchForm onSearch={handleSearch} />
       </div>
 
-      <Tabs
-        id="controlled-tab-example"
-        activeKey={key}
-        onSelect={(k) => setKey(k)}
-        className="mb-3"
-      >
-        <Tab eventKey="Kitapyurdu" title="Kitapyurdu">
-          {query && sortOption && (
-            <Kitapyurdu searchText={query} sortOption={sortOption} />
-          )}
-        </Tab>
-        <Tab eventKey="Trendyol" title="Trendyol">
-          {query && sortOption && (
-            <Trendyol searchText={query} sortOption={sortOption} />
-          )}
-        </Tab>
-        <Tab eventKey="Hepsiburada" title="Hepsiburada">
-          {query && sortOption && (
-            <Hepsiburada searchText={query} sortOption={sortOption} />
-          )}
-        </Tab>
-        <Tab eventKey="Amazon" title="Amazon">
-          {query && sortOption && <Amazon searchText={query} />}
-        </Tab>
-        <Tab eventKey="DNR" title="D&R">
-          {query && sortOption && (
-            <Dr searchText={query} sortOption={sortOption} />
-          )}
-        </Tab>
-      </Tabs>
+      {/* <Books
+        products={products.sort(
+          (a, b) => parsePrice(a.price) - parsePrice(b.price)
+        )}
+      /> */}
+
+      <Books products={products} />
     </div>
   );
 }
