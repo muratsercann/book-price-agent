@@ -13,7 +13,6 @@ function App() {
   const [sortOption, setSortOption] = useState("recommended");
 
   const handleSearch = (searchText, sortOption) => {
-    setQuery(null);
     setQuery(searchText);
     setSortOption(sortOption);
   };
