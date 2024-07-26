@@ -1,10 +1,38 @@
 import React, { useState, useMemo } from "react";
 import { Table, Form, Row, Col } from "react-bootstrap";
 
-export default function Books({ products }) {
+export default function Books({ products, loading }) {
   const [selectedAuthor, setSelectedAuthor] = useState("");
   const [selectedPublisher, setSelectedPublisher] = useState("");
   const [sortOption, setSortOption] = useState("recommended"); // Varsayılan sıralama
+
+  const stores = {
+    kitapyurdu: {
+      key: "kitapyurdu",
+      title: "Kitapyurdu",
+      url: "kitapyurdu.com",
+    },
+    trendyol: {
+      key: "trendyol",
+      title: "Trendyol",
+      url: "trendyol.com",
+    },
+    hepsiburada: {
+      key: "hepsiburada",
+      title: "Hepsiburada",
+      url: "hepsiburada.com",
+    },
+    amazon: {
+      key: "amazon",
+      title: "Amazon",
+      url: "amazon.com.tr",
+    },
+    dr: {
+      key: "dr",
+      title: "D&R",
+      url: "dr.com.tr",
+    },
+  };
 
   const handleClearFilters = (event) => {
     event.preventDefault(); // Linkin varsayılan davranışını engelle
@@ -113,9 +141,10 @@ export default function Books({ products }) {
         justifyContent: "flex-start",
         alignItems: "flex-start",
         gap: "10px",
+        height: "calc(100% - 240px)",
       }}
     >
-      <div>
+      <div className="filter-form">
         <div className="mb-3" style={{ width: "200px" }}>
           <Form.Group controlId="authorFilter">
             <Form.Label
@@ -186,46 +215,73 @@ export default function Books({ products }) {
         </a>
       </div>
 
-      <div>
-        {filteredAndSortedProducts.length > 0 && (
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Mağaza</th>
-                <th>Görsel</th>
-                <th>Yayınevi</th>
-                <th>Kitap Adı</th>
-                <th>Yazar</th>
-                <th>Fiyat</th>
-                <th>Link</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredAndSortedProducts.map((product, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{product.store}</td>
-                  <td>
-                    <img width={40} alt="" src={product.imageSrc}></img>
-                  </td>
-                  <td>{product.publisher}</td>
-                  <td>{product.title}</td>
-                  <td>{product.writer}</td>
-                  <td>{formatPrice(product.price)}</td>
-                  <td>
-                    <a
-                      href={product.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Gözat
-                    </a>
-                  </td>
+      <div
+        className="product-list"
+        style={{
+          padding: "10px",
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        {loading ? (
+          <>Loading..</>
+        ) : (
+          filteredAndSortedProducts.length > 0 && (
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Görsel</th>
+                  <th>Yayınevi</th>
+                  <th>Kitap Adı</th>
+                  <th>Yazar</th>
+                  <th>Fiyat</th>
+                  <th>Mağaza</th>
+                  <th>Link</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {filteredAndSortedProducts.map((product, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+
+                    <td>
+                      <img width={80} alt="" src={product.imageSrc}></img>
+                    </td>
+                    <td>{product.publisher}</td>
+                    <td>{product.title}</td>
+                    <td>{product.writer}</td>
+                    <td>{formatPrice(product.price)}</td>
+                    <td>
+                      <img
+                        width={95}
+                        style={{ borderRadius: "10px" }}
+                        alt={product.store}
+                        src={`/logos/${product.store}.png`}
+                      />
+                      <a
+                        href={"https://" + stores[product.store].url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="store-link"
+                      >
+                        {stores[product.store].url}
+                      </a>
+                    </td>
+                    <td style={{ verticalAlign: "middle" }}>
+                      <a
+                        href={product.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Gözat
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          )
         )}
       </div>
     </div>

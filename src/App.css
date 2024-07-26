@@ -1,6 +1,7 @@
 .App {
   text-align: center;
-  padding: 80px;
+  padding: 25px;
+  height: 100%;
 }
 
 .App-logo {
@@ -36,4 +37,45 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.filter-form,
+.filter-form > * select,
+.filter-form > * option,
+.filter-form > .form-select {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+.product-list > *.table {
+  font-size: 13px !important;
+  font-weight: 400 !important;
+}
+
+a:hover {
+  color: rebeccapurple;
+}
+
+td {
+  vertical-align: middle;
+}
+
+.store-link {
+  color: #627895;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 5px;
+  text-decoration: none;
+}
+
+.store-img {
+  width: "25px";
+  border-radius: 10px;
+}
+
+ul#controlled-tab-example > li > button {
+  color: #0d7e91;
+  font-size: 21px;
+  font-weight: 400;
+  /* padding: 21px; */
 }
