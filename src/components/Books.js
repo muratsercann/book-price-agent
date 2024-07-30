@@ -6,6 +6,20 @@ export default function Books({ products, loading }) {
   const [selectedPublisher, setSelectedPublisher] = useState("");
   const [sortOption, setSortOption] = useState("recommended"); // Varsayılan sıralama
 
+  if (loading && selectedAuthor !== "") {
+    setSelectedAuthor("");
+    console.log("clear selectedAuthor ");
+  }
+
+  if (loading && selectedPublisher !== "") {
+    setSelectedPublisher("");
+    console.log("clear selectedPublisher ");
+  }
+
+  if (loading && sortOption !== "recommended") {
+    setSortOption("recommended");
+  }
+
   const stores = {
     kitapyurdu: {
       key: "kitapyurdu",
@@ -124,14 +138,17 @@ export default function Books({ products, loading }) {
     return formattedPrice + " TL";
   }
 
-  let totalStr =
+  let totalStr = !loading ? (
     products.length > 0 ? (
       <span>
         <strong>{filteredAndSortedProducts.length + " sonuç bulundu"}</strong>
       </span>
     ) : (
       <span>Sonuç bulunamadı</span>
-    );
+    )
+  ) : (
+    <span style={{ color: "darkred" }}>Yükleniyor..</span>
+  );
 
   return (
     <div
@@ -224,7 +241,12 @@ export default function Books({ products, loading }) {
         }}
       >
         {loading ? (
-          <Spinner color="darkred" />
+          <div>
+            <Spinner color="darkred" />
+            <div style={{ fontSize: "14px", fontWeight: "600" }}>
+              Yükleniyor..
+            </div>
+          </div>
         ) : (
           filteredAndSortedProducts.length > 0 && (
             <Table striped bordered hover>
