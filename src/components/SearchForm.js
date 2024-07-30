@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { Form, Button, Container, Row, Col, InputGroup } from "react-bootstrap"; // react-bootstrap bileşenleri import ediliyor
 
 function SearchForm({ onSearch }) {
-  const [searchText, setSearchText] = useState(
-    "Kürk Mantolu Madonna Sabahattin Ali"
-  );
+  const [searchText, setSearchText] = useState("");
 
   const [sortOption, setSortOption] = useState("recommended");
 

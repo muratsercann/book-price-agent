@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Table, Form, Row, Col } from "react-bootstrap";
+import { Table, Form, Row, Col, Spinner } from "react-bootstrap";
 
 export default function Books({ products, loading }) {
   const [selectedAuthor, setSelectedAuthor] = useState("");
@@ -224,7 +224,7 @@ export default function Books({ products, loading }) {
         }}
       >
         {loading ? (
-          <>Loading..</>
+          <Spinner color="darkred" />
         ) : (
           filteredAndSortedProducts.length > 0 && (
             <Table striped bordered hover>
@@ -269,7 +269,7 @@ export default function Books({ products, loading }) {
                     <td>{product.publisher}</td>
                     <td>{product.title}</td>
                     <td>{product.writer}</td>
-                    <td>{formatPrice(product.price)}</td>
+                    <td className="td-price">{formatPrice(product.price)}</td>
                     <td style={{ verticalAlign: "middle" }}>
                       <a
                         href={product.link}

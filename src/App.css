@@ -96,6 +96,16 @@ ul#controlled-tab-example > li > button {
   height: auto;
 }
 
+.td-price {
+  font-weight: 600;
+  color: #94184e !important;
+  font-size: 20px;
+}
+
+.spinner-border {
+  color: darkred;
+}
+
 /*For svg table image*/
 /* SMOKE */
 #smoke-1 {

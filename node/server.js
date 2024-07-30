@@ -44,7 +44,7 @@ async function getPageHtml(url, selector = null) {
 
   const end = new Date();
   const duration = end - start; // Millisaniye cinsinden süre
-  console.log(`Çalışma süresi: ${duration} ms`);
+  // console.log(`Çalışma süresi: ${duration} ms`);
   return htmlContent;
 }
 
