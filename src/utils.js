@@ -21,22 +21,34 @@ export const getKitapYurduProducts = async (searchText, sortOption) => {
     // İçerideki product-cr öğelerini seçin
     productTableDiv.querySelectorAll(".product-cr").forEach((el) => {
       const store = "kitapyurdu";
-      const title = el.querySelector(".name span")?.textContent || "No Title";
-      let price =
-        el.querySelector(".price-new .value")?.textContent || "No Price";
+      const title = (
+        el.querySelector(".name span")?.textContent || "No Title"
+      ).trim();
+      let price = (
+        el.querySelector(".price-new .value")?.textContent || "No Price"
+      ).trim();
       if (price !== "No Price")
         price = price.replace("TL", "").replaceAll(" ", "");
 
-      const link =
-        el.querySelector(".pr-img-link")?.getAttribute("href") || "#";
+      const link = (
+        el.querySelector(".pr-img-link")?.getAttribute("href") || "#"
+      ).trim();
 
-      const writer =
-        el.querySelector(".author span")?.textContent.trim() || "No Writer";
+      const writer = (
+        el.querySelector(".author span")?.textContent.trim() || "No Writer"
+      )
+        .trim()
+        .toLocaleUpperCase("tr-TR");
 
-      const publisher =
-        el.querySelector(".publisher span")?.textContent || "No Publisher";
+      const publisher = (
+        el.querySelector(".publisher span")?.textContent || "No Publisher"
+      )
+        .trim()
+        .toLocaleUpperCase("tr-TR");
 
-      const imageSrc = el.querySelector(".cover img").getAttribute("src") || "";
+      const imageSrc = (
+        el.querySelector(".cover img").getAttribute("src") || ""
+      ).trim();
 
       results.push({ store, publisher, title, writer, price, link, imageSrc });
     });
@@ -72,23 +84,26 @@ export const getAmazonProducts = async (searchText) => {
     const results = [];
     productList.forEach((el) => {
       const store = "amazon";
-      const title =
-        el.querySelector('[data-cy="title-recipe"]')?.textContent || "No Title";
+      const title = (
+        el.querySelector('[data-cy="title-recipe"]')?.textContent || "No Title"
+      ).trim();
 
-      let price =
+      let price = (
         el.querySelector('[data-cy="price-recipe"] .a-price-whole')
-          ?.textContent || "No Price";
+          ?.textContent || "No Price"
+      ).trim();
 
       if (price !== "No Price") {
         price += "00";
         price = price.replace("TL", "").replaceAll(" ", "");
       }
 
-      const link =
+      const link = (
         storeBaseUrl +
         (el
           .querySelector('[data-cy="title-recipe"] h2 a')
-          ?.getAttribute("href") || "");
+          ?.getAttribute("href") || "")
+      ).trim();
 
       const writer = "-";
       const publisher = "-";
@@ -98,7 +113,9 @@ export const getAmazonProducts = async (searchText) => {
       // const publisher =
       //   el.querySelector(".publisher span")?.textContent || "No Publisher";
 
-      const imageSrc = el.querySelector(".s-image").getAttribute("src") || "";
+      const imageSrc = (
+        el.querySelector(".s-image").getAttribute("src") || ""
+      ).trim();
 
       const arr = searchText?.split(" ") || [];
 
@@ -149,26 +166,32 @@ export const getDrproducts = async (searchText, sortOption) => {
 
       const store = "dr";
 
-      const title = product_info?.item_name || "-";
+      const title = (product_info?.item_name || "-").trim();
 
-      let price = product_info?.price || "No Price";
+      let price = (product_info?.price || "No Price").trim();
       if (price !== "No Price")
         price = price.replace("TL", "").replaceAll(" ", "").replace(".", ","); //for only dr.
 
-      const link =
+      const link = (
         storeBaseUrl +
-        (el.querySelector(".product-img a")?.getAttribute("href") || "");
+        (el.querySelector(".product-img a")?.getAttribute("href") || "")
+      ).trim();
 
-      const writer = product_info?.author || "-";
-      const publisher = product_info?.publisher || "-";
+      const writer = (product_info?.author || "-")
+        .trim()
+        .toLocaleUpperCase("tr-TR");
+      const publisher = (product_info?.publisher || "-")
+        .trim()
+        .toLocaleUpperCase("tr-TR");
       // const writer =
       //   el.querySelector(".author span")?.textContent.trim() || "No Writer";
 
       // const publisher =
       //   el.querySelector(".publisher span")?.textContent || "No Publisher";
 
-      const imageSrc =
-        el.querySelector(".product-img img")?.getAttribute("data-src") || "";
+      const imageSrc = (
+        el.querySelector(".product-img img")?.getAttribute("data-src") || ""
+      ).trim();
 
       const arr = searchText?.split(" ") || [];
 
@@ -215,19 +238,22 @@ export const getHepsiburadaProducts = async (searchText, sortOption) => {
     const results = [];
     productList.forEach((el) => {
       const store = "hepsiburada";
-      const title =
+      const title = (
         el.querySelector('[data-test-id="product-card-name"]')?.textContent ||
-        "No Title";
+        "No Title"
+      ).trim();
 
-      let price =
+      let price = (
         el.querySelector('[data-test-id="price-current-price"]')?.textContent ||
-        "No Price";
+        "No Price"
+      ).trim();
 
       if (price !== "No Price")
         price = price.replace("TL", "").replaceAll(" ", "");
 
-      const link =
-        storeBaseUrl + (el.querySelector("a")?.getAttribute("href") || "");
+      const link = (
+        storeBaseUrl + (el.querySelector("a")?.getAttribute("href") || "")
+      ).trim();
 
       const writer = "-";
       const publisher = "-";
@@ -237,7 +263,9 @@ export const getHepsiburadaProducts = async (searchText, sortOption) => {
       // const publisher =
       //   el.querySelector(".publisher span")?.textContent || "No Publisher";
 
-      const imageSrc = el.querySelector("img")?.getAttribute("src") || "";
+      const imageSrc = (
+        el.querySelector("img")?.getAttribute("src") || ""
+      ).trim();
 
       const arr = searchText?.split(" ") || [];
 
@@ -289,30 +317,36 @@ export const getTrendyolProducts = async (searchText, sortOption) => {
     const results = [];
     productList.forEach((el) => {
       const store = "trendyol";
-      const title =
+      const title = (
         (el.querySelector(".prdct-desc-cntnr-name")?.textContent || "") +
         " " +
-        (el.querySelector(".product-desc-sub-text")?.textContent || "");
+        (el.querySelector(".product-desc-sub-text")?.textContent || "")
+      ).trim();
 
-      let price =
-        el.querySelector(".prc-box-dscntd")?.textContent || "No Price";
+      let price = (
+        el.querySelector(".prc-box-dscntd")?.textContent || "No Price"
+      ).trim();
       if (price !== "No Price")
         price = price.replace("TL", "").replaceAll(" ", "");
 
-      const link =
-        storeBaseUrl + (el.querySelector("a")?.getAttribute("href") || "");
+      const link = (
+        storeBaseUrl + (el.querySelector("a")?.getAttribute("href") || "")
+      ).trim();
 
       const writer = "-";
       // const publisher = "-";
       // const writer =
       //   el.querySelector(".author span")?.textContent.trim() || "No Writer";
 
-      const publisher =
-        el.querySelector(".prdct-desc-cntnr-ttl")?.textContent ||
-        "No Publisher";
+      const publisher = (
+        el.querySelector(".prdct-desc-cntnr-ttl")?.textContent || "No Publisher"
+      )
+        .trim()
+        .toLocaleUpperCase("tr-TR");
 
-      const imageSrc =
-        el.querySelector("img.p-card-img")?.getAttribute("src") || "";
+      const imageSrc = (
+        el.querySelector("img.p-card-img")?.getAttribute("src") || ""
+      ).trim();
 
       const arr = searchText?.split(" ") || [];
 

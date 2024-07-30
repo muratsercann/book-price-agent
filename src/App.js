@@ -13,9 +13,10 @@ import Books from "./components/Books.js";
 import { IoBookSharp } from "react-icons/io5";
 import { TbWorldSearch } from "react-icons/tb";
 import { ImBooks } from "react-icons/im";
+import TableSvg from "./TableSvg.js";
 function App() {
   const [query, setQuery] = useState("");
-  const [key, setKey] = useState("Kitapyurdu");
+  const [key, setKey] = useState("All");
   const [sortOption, setSortOption] = useState("recommended");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -134,6 +135,9 @@ function App() {
   return (
     <div className="App">
       <div className="header" style={{ height: "250px" }}>
+        <div className="header-img">
+          <TableSvg />
+        </div>
         <div style={{ fontSize: "53px" }}>
           <ImBooks color="rgb(165 38 62)" />
           <span style={{ marginLeft: "20px" }}>Kitap Arama</span>

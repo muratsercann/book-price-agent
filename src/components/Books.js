@@ -231,12 +231,12 @@ export default function Books({ products, loading }) {
               <thead>
                 <tr>
                   <th>No</th>
+                  <th>Mağaza</th>
                   <th>Görsel</th>
                   <th>Yayınevi</th>
                   <th>Kitap Adı</th>
                   <th>Yazar</th>
                   <th>Fiyat</th>
-                  <th>Mağaza</th>
                   <th>Link</th>
                 </tr>
               </thead>
@@ -244,21 +244,15 @@ export default function Books({ products, loading }) {
                 {filteredAndSortedProducts.map((product, index) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
-
                     <td>
-                      <img width={80} alt="" src={product.imageSrc}></img>
-                    </td>
-                    <td>{product.publisher}</td>
-                    <td>{product.title}</td>
-                    <td>{product.writer}</td>
-                    <td>{formatPrice(product.price)}</td>
-                    <td>
-                      <img
-                        width={95}
-                        style={{ borderRadius: "10px" }}
-                        alt={product.store}
-                        src={`/logos/${product.store}.png`}
-                      />
+                      <div>
+                        <img
+                          width={35}
+                          style={{ borderRadius: "4px" }}
+                          alt={product.store}
+                          src={`/logos/${product.store}.png`}
+                        />
+                      </div>
                       <a
                         href={"https://" + stores[product.store].url}
                         target="_blank"
@@ -268,6 +262,14 @@ export default function Books({ products, loading }) {
                         {stores[product.store].url}
                       </a>
                     </td>
+
+                    <td>
+                      <img width={80} alt="" src={product.imageSrc}></img>
+                    </td>
+                    <td>{product.publisher}</td>
+                    <td>{product.title}</td>
+                    <td>{product.writer}</td>
+                    <td>{formatPrice(product.price)}</td>
                     <td style={{ verticalAlign: "middle" }}>
                       <a
                         href={product.link}
