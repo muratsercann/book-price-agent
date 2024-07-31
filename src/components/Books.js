@@ -144,7 +144,7 @@ export default function Books({ products, loading }) {
         <strong>{filteredAndSortedProducts.length + " sonuç bulundu"}</strong>
       </span>
     ) : (
-      <span>Sonuç bulunamadı</span>
+      <span>Sonuç yok</span>
     )
   ) : (
     <span style={{ color: "darkred" }}>Yükleniyor..</span>
@@ -247,65 +247,65 @@ export default function Books({ products, loading }) {
               Yükleniyor..
             </div>
           </div>
-        ) : (
-          filteredAndSortedProducts.length > 0 && (
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Mağaza</th>
-                  <th>Görsel</th>
-                  <th>Yayınevi</th>
-                  <th>Kitap Adı</th>
-                  <th>Yazar</th>
-                  <th>Fiyat</th>
-                  <th>Link</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredAndSortedProducts.map((product, index) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>
-                      <div>
-                        <img
-                          width={35}
-                          style={{ borderRadius: "4px" }}
-                          alt={product.store}
-                          src={`/logos/${product.store}.png`}
-                        />
-                      </div>
-                      <a
-                        href={"https://" + stores[product.store].url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="store-link"
-                      >
-                        {stores[product.store].url}
-                      </a>
-                    </td>
+        ) : filteredAndSortedProducts.length > 0 ? (
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Mağaza</th>
+                <th>Görsel</th>
+                <th>Yayınevi</th>
+                <th>Kitap Adı</th>
+                <th>Yazar</th>
+                <th>Fiyat</th>
+                <th>Link</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredAndSortedProducts.map((product, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>
+                    <div>
+                      <img
+                        width={35}
+                        style={{ borderRadius: "4px" }}
+                        alt={product.store}
+                        src={`/logos/${product.store}.png`}
+                      />
+                    </div>
+                    <a
+                      href={"https://" + stores[product.store].url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="store-link"
+                    >
+                      {stores[product.store].url}
+                    </a>
+                  </td>
 
-                    <td>
-                      <img width={80} alt="" src={product.imageSrc}></img>
-                    </td>
-                    <td>{product.publisher}</td>
-                    <td>{product.title}</td>
-                    <td>{product.writer}</td>
-                    <td className="td-price">{formatPrice(product.price)}</td>
-                    <td style={{ verticalAlign: "middle" }}>
-                      <a
-                        href={product.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Gözat
-                      </a>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          )
+                  <td>
+                    <img width={80} alt="" src={product.imageSrc}></img>
+                  </td>
+                  <td>{product.publisher}</td>
+                  <td>{product.title}</td>
+                  <td>{product.writer}</td>
+                  <td className="td-price">{formatPrice(product.price)}</td>
+                  <td style={{ verticalAlign: "middle" }}>
+                    <a
+                      href={product.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Gözat
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        ) : (
+          <div style={{ fontWeight: "600" }}>Sonuç yok</div>
         )}
       </div>
     </div>
