@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import SearchForm from "./components/SearchForm";
 import Kitapyurdu from "./components/Kitapyurdu";
 import Hepsiburada from "./components/Hepsiburada";
@@ -132,14 +132,17 @@ function App() {
     return result;
   };
 
-  const books = {
-    all: products,
-    kitapyurdu: products.filter((p) => p.store === stores.kitapyurdu),
-    trendyol: products.filter((p) => p.store === stores.trendyol),
-    hepsiburada: products.filter((p) => p.store === stores.hepsiburada),
-    amazon: products.filter((p) => p.store === stores.amazon),
-    dr: products.filter((p) => p.store === stores.dr),
-  };
+  const books = useMemo(
+    () => ({
+      all: products,
+      kitapyurdu: products.filter((p) => p.store === stores.kitapyurdu),
+      trendyol: products.filter((p) => p.store === stores.trendyol),
+      hepsiburada: products.filter((p) => p.store === stores.hepsiburada),
+      amazon: products.filter((p) => p.store === stores.amazon),
+      dr: products.filter((p) => p.store === stores.dr),
+    }),
+    [products, stores]
+  );
 
   useLayoutEffect(() => {
     const allTab = document.querySelector("#controlled-tab-example-tab-All");
@@ -226,7 +229,7 @@ function App() {
         }
       });
     }
-  }, [products]);
+  }, [books]);
   return (
     <div className="App">
       <div className="header" style={{ height: "250px" }}>
