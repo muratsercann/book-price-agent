@@ -100,13 +100,17 @@ function App() {
     }
   };
 
-  const stores = {
-    kitapyurdu: "kitapyurdu",
-    trendyol: "trendyol",
-    hepsiburada: "hepsiburada",
-    amazon: "amazon",
-    dr: "dr",
-  };
+  const stores = useMemo(
+    () => ({
+      kitapyurdu: "kitapyurdu",
+      trendyol: "trendyol",
+      hepsiburada: "hepsiburada",
+      amazon: "amazon",
+      dr: "dr",
+    }),
+    []
+  );
+
   useEffect(() => {
     if (products.length === 0) return;
     console.log("products changed..");
