@@ -37,7 +37,9 @@ async function genericSearch(url, storeName, selectors) {
   await browser.close();
 
   time = new Date();
-  console.log(`Kitap bilgileri alındı. Toplam : ${products?.length} kitap`);
+  console.log(
+    `${storeName} - Kitap bilgileri alındı. Toplam : ${products?.length} kitap`
+  );
   console.log(
     `İşlem Bitiş : ${time.toLocaleDateString()} ${time.toLocaleTimeString()}`
   );

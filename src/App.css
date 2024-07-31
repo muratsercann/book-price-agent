@@ -164,3 +164,23 @@ ul#controlled-tab-example > li > button {
 }
 
 /*End for svg table image*/
+
+span.item-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 26px;
+  background-color: #16b7b5;
+  color: #fff;
+  border-radius: 41%;
+  font-size: 13px;
+  font-weight: 400;
+  text-align: center;
+  margin-left: 19px;
+}
+span.item-count.zero-count {
+  background-color: #a8a8a812 !important;
+  color: #4e4d4d30;
+  font-size: 13px;
+}

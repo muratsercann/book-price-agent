@@ -76,7 +76,9 @@ async function searchDr(url, storeName, selectors) {
   await browser.close();
 
   time = new Date();
-  console.log(`Kitap bilgileri alındı. Toplam : ${products?.length} kitap`);
+  console.log(
+    `${store} - Kitap bilgileri alındı. Toplam : ${products?.length} kitap`
+  );
   console.log(
     `İşlem Bitiş : ${time.toLocaleDateString()} ${time.toLocaleTimeString()}`
   );

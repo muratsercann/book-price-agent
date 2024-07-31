@@ -92,7 +92,9 @@ async function search(searchText, sortOption) {
     });
 
     time = new Date();
-    console.log(`Kitap bilgileri alındı. Toplam : ${results?.length} kitap`);
+    console.log(
+      `${store} - Kitap bilgileri alındı. Toplam : ${results?.length} kitap`
+    );
     console.log(
       `İşlem Bitiş : ${time.toLocaleDateString()} ${time.toLocaleTimeString()}`
     );

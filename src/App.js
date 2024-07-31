@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import SearchForm from "./components/SearchForm";
 import Kitapyurdu from "./components/Kitapyurdu";
 import Hepsiburada from "./components/Hepsiburada";
@@ -132,6 +132,101 @@ function App() {
     return result;
   };
 
+  const books = {
+    all: products,
+    kitapyurdu: products.filter((p) => p.store === stores.kitapyurdu),
+    trendyol: products.filter((p) => p.store === stores.trendyol),
+    hepsiburada: products.filter((p) => p.store === stores.hepsiburada),
+    amazon: products.filter((p) => p.store === stores.amazon),
+    dr: products.filter((p) => p.store === stores.dr),
+  };
+
+  useLayoutEffect(() => {
+    const allTab = document.querySelector("#controlled-tab-example-tab-All");
+    const kitapyurduTab = document.querySelector(
+      "#controlled-tab-example-tab-Kitapyurdu"
+    );
+    const trendyolTab = document.querySelector(
+      "#controlled-tab-example-tab-Trendyol"
+    );
+    const hepsiburadaTab = document.querySelector(
+      "#controlled-tab-example-tab-Hepsiburada"
+    );
+    const amazonTab = document.querySelector(
+      "#controlled-tab-example-tab-Amazon"
+    );
+    const drTab = document.querySelector("#controlled-tab-example-tab-Dr");
+
+    if (allTab.querySelectorAll(".item-count").length === 0) {
+      const newElement = document.createElement("span");
+      newElement.textContent = books.all.length;
+      newElement.className = "item-count";
+      allTab.appendChild(newElement);
+    } else {
+      allTab.querySelectorAll(".item-count")[0].textContent = books.all.length;
+    }
+
+    if (kitapyurduTab.querySelectorAll(".item-count").length === 0) {
+      const newElement = document.createElement("span");
+      newElement.textContent = books.kitapyurdu.length;
+      newElement.className = "item-count";
+      kitapyurduTab.appendChild(newElement);
+    } else {
+      kitapyurduTab.querySelectorAll(".item-count")[0].textContent =
+        books.kitapyurdu.length;
+    }
+
+    if (trendyolTab.querySelectorAll(".item-count").length === 0) {
+      const newElement = document.createElement("span");
+      newElement.textContent = books.trendyol.length;
+      newElement.className = "item-count";
+      trendyolTab.appendChild(newElement);
+    } else {
+      trendyolTab.querySelectorAll(".item-count")[0].textContent =
+        books.trendyol.length;
+    }
+
+    if (hepsiburadaTab.querySelectorAll(".item-count").length === 0) {
+      const newElement = document.createElement("span");
+      newElement.textContent = books.hepsiburada.length;
+      newElement.className = "item-count";
+      hepsiburadaTab.appendChild(newElement);
+    } else {
+      hepsiburadaTab.querySelectorAll(".item-count")[0].textContent =
+        books.hepsiburada.length;
+    }
+
+    if (amazonTab.querySelectorAll(".item-count").length === 0) {
+      const newElement = document.createElement("span");
+      newElement.textContent = books.amazon.length;
+      newElement.className = "item-count";
+      amazonTab.appendChild(newElement);
+    } else {
+      amazonTab.querySelectorAll(".item-count")[0].textContent =
+        books.amazon.length;
+    }
+
+    if (drTab.querySelectorAll(".item-count").length === 0) {
+      const newElement = document.createElement("span");
+      newElement.textContent = books.dr.length;
+      newElement.className = "item-count";
+      drTab.appendChild(newElement);
+    } else {
+      drTab.querySelectorAll(".item-count")[0].textContent = books.dr.length;
+    }
+
+    const tabSpanList = document.querySelectorAll("span.item-count");
+    if (tabSpanList.length > 0) {
+      tabSpanList.forEach((span) => {
+        const value = span.textContent.trim();
+        if (value === "0" && !span.classList.contains("zero-count")) {
+          span.classList.add("zero-count");
+        } else if (value !== "0" && span.classList.contains("zero-count")) {
+          span.classList.remove("zero-count");
+        }
+      });
+    }
+  }, [products]);
   return (
     <div className="App">
       <div className="header" style={{ height: "250px" }}>
@@ -161,38 +256,23 @@ function App() {
         variant="underline"
         fill
       >
-        <Tab eventKey="All" title="Tümü">
-          <Books products={products} loading={loading} />
+        <Tab eventKey="All" title={`Tümü`}>
+          <Books products={books.all} loading={loading} />
         </Tab>
-        <Tab eventKey="Kitapyurdu" title="Kitapyurdu">
-          <Books
-            products={products.filter((p) => p.store === stores.kitapyurdu)}
-            loading={loading}
-          />
+        <Tab eventKey="Kitapyurdu" title={`Kitapyurdu`}>
+          <Books products={books.hepsiburada} loading={loading} />
         </Tab>
-        <Tab eventKey="Trendyol" title="Trendyol">
-          <Books
-            products={products.filter((p) => p.store === stores.trendyol)}
-            loading={loading}
-          />
+        <Tab eventKey="Trendyol" title={`Trendyol`}>
+          <Books products={books.trendyol} loading={loading} />
         </Tab>
-        <Tab eventKey="Hepsiburada" title="Hepsiburada">
-          <Books
-            products={products.filter((p) => p.store === stores.hepsiburada)}
-            loading={loading}
-          />
+        <Tab eventKey="Hepsiburada" title={`Hepsiburada`}>
+          <Books products={books.hepsiburada} loading={loading} />
         </Tab>
-        <Tab eventKey="Amazon" title="Amazon">
-          <Books
-            products={products.filter((p) => p.store === stores.amazon)}
-            loading={loading}
-          />
+        <Tab eventKey="Amazon" title={`Amazon`}>
+          <Books products={books.amazon} loading={loading} />
         </Tab>
-        <Tab eventKey="DNR" title="D&R">
-          <Books
-            products={products.filter((p) => p.store === stores.dr)}
-            loading={loading}
-          />
+        <Tab eventKey="Dr" title={`D&R`}>
+          <Books products={books.dr} loading={loading} />
         </Tab>
       </Tabs>
     </div>
