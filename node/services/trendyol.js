@@ -8,7 +8,7 @@ const selectors = {
   productsContainer: ".prdct-cntnr-wrppr",
   product: ".p-card-wrppr",
   title: [".prdct-desc-cntnr-name", ".product-desc-sub-text"],
-  price: ".prc-box-dscntd",
+  price: [".prc-box-dscntd"],
   link: "a",
   author: ".no-author-info",
   publisher: ".prdct-desc-cntnr-ttl",

@@ -6,7 +6,10 @@ const selectors = {
   productsContainer: ".s-search-results",
   product: '[data-component-type="s-search-result"]',
   title: ['[data-cy="title-recipe"]'],
-  price: '[data-cy="price-recipe"] .a-price-whole',
+  price: [
+    '[data-cy="price-recipe"] .a-price-whole',
+    '[data-cy="price-recipe"] .a-price-fraction',
+  ],
   link: '[data-cy="title-recipe"] h2 a',
   author: ".no-author-info",
   publisher: ".no-publisher-info",

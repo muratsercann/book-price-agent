@@ -29,6 +29,7 @@ async function genericSearch(url, storeName, selectors) {
 
   let products = await getProducts(page, selectors);
 
+  products = products.filter((p) => p.price !== "");
   products = products.map((p) => ({
     ...p,
     store: storeName,
@@ -68,9 +69,12 @@ async function getProducts(page, selectors) {
       }
 
       let price = (
-        el.querySelector(selectors.price)?.textContent || "-"
+        el.querySelector(selectors.price[0])?.textContent || ""
       ).trim();
-      if (price !== "-") price = price.replace("TL", "").replaceAll(" ", "");
+      if (selectors.price.length > 1) {
+        price += el.querySelector(selectors.price[1])?.textContent.trim() || "";
+      }
+      if (price !== "") price = price.replace("TL", "").replaceAll(" ", "");
 
       const link = (
         el.querySelector(selectors.link)?.getAttribute("href") || "#"
