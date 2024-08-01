@@ -14,6 +14,7 @@ function App() {
   const [hepsiburadaLoading, setHepsiburadaLoading] = useState(false);
   const [amazonLoading, setAmazonLoading] = useState(false);
   const [drLoading, setDrLoading] = useState(false);
+  const [searchPerformed, setSearchPerformed] = useState(false);
 
   const [kitapyurduProducts, setKitapyurduProducts] = useState([]);
   const [trendyolProducts, setTrendyolProducts] = useState([]);
@@ -25,6 +26,7 @@ function App() {
     console.log("sort option : " + sortOption);
     console.log("fetching producs...");
 
+    setSearchPerformed(true);
     setKitapyurduLoading(true);
     setTrendyolLoading(true);
     setHepsiburadaLoading(true);
@@ -60,8 +62,9 @@ function App() {
           if (response.ok && response.data.length > 0) {
             console.log(`${setProductsFn.name} count: ${response.data.length}`);
             setProductsFn(response.data);
-            setLoadingFn(false);
           }
+
+          setLoadingFn(false);
         } catch (error) {
           console.error(`Error handling response:`, error);
         }
@@ -234,6 +237,7 @@ function App() {
             }
             sortOption={tabsSortOption}
             setSortOption={setTabsSortOption}
+            searchPerformed={searchPerformed}
           />
         </Tab>
         <Tab eventKey="Kitapyurdu" title={`Kitapyurdu`}>
@@ -242,6 +246,7 @@ function App() {
             loading={kitapyurduLoading}
             sortOption={tabsSortOption}
             setSortOption={setTabsSortOption}
+            searchPerformed={searchPerformed}
           />
         </Tab>
         <Tab eventKey="Trendyol" title={`Trendyol`}>
@@ -250,6 +255,7 @@ function App() {
             loading={trendyolLoading}
             sortOption={tabsSortOption}
             setSortOption={setTabsSortOption}
+            searchPerformed={searchPerformed}
           />
         </Tab>
         <Tab eventKey="Hepsiburada" title={`Hepsiburada`}>
@@ -258,6 +264,7 @@ function App() {
             loading={hepsiburadaLoading}
             sortOption={tabsSortOption}
             setSortOption={setTabsSortOption}
+            searchPerformed={searchPerformed}
           />
         </Tab>
         <Tab eventKey="Amazon" title={`Amazon`}>
@@ -266,6 +273,7 @@ function App() {
             loading={amazonLoading}
             sortOption={tabsSortOption}
             setSortOption={setTabsSortOption}
+            searchPerformed={searchPerformed}
           />
         </Tab>
         <Tab eventKey="Dr" title={`D&R`}>
@@ -274,6 +282,7 @@ function App() {
             loading={drLoading}
             sortOption={tabsSortOption}
             setSortOption={setTabsSortOption}
+            searchPerformed={searchPerformed}
           />
         </Tab>
       </Tabs>

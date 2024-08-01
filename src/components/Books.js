@@ -6,6 +6,7 @@ export default function Books({
   loading,
   sortOption,
   setSortOption,
+  searchPerformed,
 }) {
   const [selectedAuthor, setSelectedAuthor] = useState("");
   const [selectedPublisher, setSelectedPublisher] = useState("");
@@ -307,7 +308,9 @@ export default function Books({
             </tbody>
           </Table>
         ) : (
-          <div style={{ fontWeight: "600" }}>Sonuç yok</div>
+          <div style={{ fontWeight: "600" }}>
+            {searchPerformed ? "Aramanıza uygun bir sonuç bulunamadı." : ""}
+          </div>
         )}
       </div>
     </div>
