@@ -74,7 +74,10 @@ async function search(searchText, sortOption) {
 
       const writer = "-";
       const publisher = "-";
-      const imageSrc = ($(el).find("img").attr("src") || "").trim();
+
+      const imageString = ($(el).find("noscript").text() || "").trim();
+      const srcMatch = imageString.match(/src="([^"]+)"/);
+      const imageSrc = srcMatch ? srcMatch[1] : "";
 
       const arr = searchText?.split(" ") || [];
 
