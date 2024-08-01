@@ -88,11 +88,12 @@ async function fastSearch(searchText, sortOption) {
     productList.each((index, el) => {
       const store = "trendyol";
 
-      const title = ($(el).find(selectors.title).text() || "-").trim();
+      const title =
+        ($(el).find(selectors.title[0]).text() || "").trim() +
+        ($(el).find(selectors.title[1]).text() || "").trim();
+      let price = ($(el).find(selectors.price[0]).text() || "").trim();
 
-      let price = ($(el).find(selectors.price).text() || "-").trim();
-
-      if (price !== "-") {
+      if (price !== "") {
         price = price.replace("TL", "").replace(/\s+/g, ""); // .replaceAll() eski Node.js sürümlerinde çalışmayabilir
       }
 
@@ -100,13 +101,13 @@ async function fastSearch(searchText, sortOption) {
         storeBaseUrl + ($(el).find(selectors.link).attr("href") || "")
       ).trim();
 
-      const writer = "-";
-      const publisher = "-";
+      const writer = "---";
+      const publisher = "---";
       const imageSrc = ($(el).find(selectors.image).attr("src") || "").trim();
 
       const arr = searchText?.split(" ") || [];
 
-      if (price !== "-") {
+      if (price !== "") {
         results.push({
           store,
           publisher,

@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useState } from "react";
 import SearchForm from "./components/SearchForm";
-import { Tab, Tabs } from "react-bootstrap";
+import { Spinner, Tab, Tabs } from "react-bootstrap";
 import "./App.css";
 import * as utils from "./utils.js";
 import Books from "./components/Books.js";
@@ -63,10 +63,10 @@ function App() {
             console.log(`${setProductsFn.name} count: ${response.data.length}`);
             setProductsFn(response.data);
           }
-
-          setLoadingFn(false);
         } catch (error) {
           console.error(`Error handling response:`, error);
+        } finally {
+          setLoadingFn(false);
         }
       };
 
@@ -119,63 +119,38 @@ function App() {
       amazonProducts.length +
       drProducts.length;
 
-    if (allTab.querySelectorAll(".item-count").length === 0) {
-      const newElement = document.createElement("span");
-      newElement.textContent = allProductsLength;
-      newElement.className = "item-count";
-      allTab.appendChild(newElement);
-    } else {
-      allTab.querySelectorAll(".item-count")[0].textContent = allProductsLength;
-    }
+    const handleTab = (tabElement, itemCount, loading = false) => {
+      const existingSpinner = tabElement.querySelector(".custom-loader");
+      if (existingSpinner) {
+        tabElement.removeChild(existingSpinner);
+      }
 
-    if (kitapyurduTab.querySelectorAll(".item-count").length === 0) {
-      const newElement = document.createElement("span");
-      newElement.textContent = kitapyurduProducts.length;
-      newElement.className = "item-count";
-      kitapyurduTab.appendChild(newElement);
-    } else {
-      kitapyurduTab.querySelectorAll(".item-count")[0].textContent =
-        kitapyurduProducts.length;
-    }
+      const existingItemCount = tabElement.querySelector(".item-count");
+      if (existingItemCount) {
+        tabElement.removeChild(existingItemCount);
+      }
+      if (loading) {
+        const spinner = document.createElement("span");
+        spinner.className = "custom-loader";
+        tabElement.appendChild(spinner);
+      } else {
+        if (tabElement.querySelectorAll(".item-count").length === 0) {
+          const newElement = document.createElement("span");
+          newElement.textContent = itemCount;
+          newElement.className = "item-count";
+          tabElement.appendChild(newElement);
+        } else {
+          tabElement.querySelectorAll(".item-count")[0].textContent = itemCount;
+        }
+      }
+    };
 
-    if (trendyolTab.querySelectorAll(".item-count").length === 0) {
-      const newElement = document.createElement("span");
-      newElement.textContent = trendyolProducts.length;
-      newElement.className = "item-count";
-      trendyolTab.appendChild(newElement);
-    } else {
-      trendyolTab.querySelectorAll(".item-count")[0].textContent =
-        trendyolProducts.length;
-    }
-
-    if (hepsiburadaTab.querySelectorAll(".item-count").length === 0) {
-      const newElement = document.createElement("span");
-      newElement.textContent = hepsiburadaProducts.length;
-      newElement.className = "item-count";
-      hepsiburadaTab.appendChild(newElement);
-    } else {
-      hepsiburadaTab.querySelectorAll(".item-count")[0].textContent =
-        hepsiburadaProducts.length;
-    }
-
-    if (amazonTab.querySelectorAll(".item-count").length === 0) {
-      const newElement = document.createElement("span");
-      newElement.textContent = amazonProducts.length;
-      newElement.className = "item-count";
-      amazonTab.appendChild(newElement);
-    } else {
-      amazonTab.querySelectorAll(".item-count")[0].textContent =
-        amazonProducts.length;
-    }
-
-    if (drTab.querySelectorAll(".item-count").length === 0) {
-      const newElement = document.createElement("span");
-      newElement.textContent = drProducts.length;
-      newElement.className = "item-count";
-      drTab.appendChild(newElement);
-    } else {
-      drTab.querySelectorAll(".item-count")[0].textContent = drProducts.length;
-    }
+    handleTab(allTab, allProductsLength);
+    handleTab(kitapyurduTab, kitapyurduProducts.length, kitapyurduLoading);
+    handleTab(trendyolTab, trendyolProducts.length, trendyolLoading);
+    handleTab(hepsiburadaTab, hepsiburadaProducts.length, hepsiburadaLoading);
+    handleTab(amazonTab, amazonProducts.length, amazonLoading);
+    handleTab(drTab, drProducts.length, drLoading);
 
     const tabSpanList = document.querySelectorAll("span.item-count");
     if (tabSpanList.length > 0) {

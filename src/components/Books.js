@@ -244,7 +244,7 @@ export default function Books({
         }}
       >
         {loading ? (
-          <div>
+          <div style={{ marginTop: "50px" }}>
             <Spinner color="darkred" />
             <div style={{ fontSize: "14px", fontWeight: "600" }}>
               Yükleniyor..
@@ -308,7 +308,9 @@ export default function Books({
             </tbody>
           </Table>
         ) : (
-          <div style={{ fontWeight: "600" }}>
+          <div
+            style={{ fontWeight: "300", color: "cadetblue", marginTop: "50px" }}
+          >
             {searchPerformed ? "Aramanıza uygun bir sonuç bulunamadı." : ""}
           </div>
         )}

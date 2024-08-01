@@ -14,6 +14,7 @@ async function genericSearch(url, storeName, selectors) {
 
   const browser = await puppeteer.launch({
     headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"], // Sandbox özelliğini kapalı
   });
 
   const page = await browser.newPage();
@@ -22,7 +23,7 @@ async function genericSearch(url, storeName, selectors) {
 
   if (selectors.waitSelector) {
     //todo msercan : check if not found...
-    await page.waitForSelector(selectors.waitSelector, { timeout: 90000 });
+    await page.waitForSelector(selectors.waitSelector, { timeout: 30000 });
   }
 
   await page.setViewport({ width: 1080, height: 1024 });
