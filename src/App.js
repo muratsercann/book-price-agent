@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import SearchForm from "./components/SearchForm";
 import { Tab, Tabs } from "react-bootstrap";
 import "./App.css";
@@ -8,6 +8,7 @@ import { ImBooks } from "react-icons/im";
 import TableSvg from "./TableSvg.js";
 function App() {
   const [key, setKey] = useState("All");
+  const [tabsSortOption, setTabsSortOption] = useState("descending");
   const [kitapyurduLoading, setKitapyurduLoading] = useState(false);
   const [trendyolLoading, setTrendyolLoading] = useState(false);
   const [hepsiburadaLoading, setHepsiburadaLoading] = useState(false);
@@ -90,23 +91,6 @@ function App() {
     hepsiburada: "hepsiburada",
     amazon: "amazon",
     dr: "dr",
-  };
-
-  // useEffect(() => {
-  //   if (products.length === 0) return;
-  //   console.log("products changed..");
-  //   console.log("products count : ", products.length);
-  // }, [products]);
-
-  const parsePrice = (priceString) => {
-    const price = priceString
-      .replaceAll(" ", "")
-      .replaceAll("TL", "")
-      .replaceAll(".", "")
-      .replaceAll(",", ".");
-
-    const result = parseFloat(price);
-    return result;
   };
 
   useLayoutEffect(() => {
@@ -224,12 +208,6 @@ function App() {
         </div>
       </div>
 
-      {/* <Books
-        products={products.sort(
-          (a, b) => parsePrice(a.price) - parsePrice(b.price)
-        )}
-      /> */}
-
       <Tabs
         id="controlled-tab-example"
         activeKey={key}
@@ -254,23 +232,49 @@ function App() {
               amazonLoading ||
               drLoading
             }
-            source="all"
+            sortOption={tabsSortOption}
+            setSortOption={setTabsSortOption}
           />
         </Tab>
         <Tab eventKey="Kitapyurdu" title={`Kitapyurdu`}>
-          <Books products={kitapyurduProducts} loading={kitapyurduLoading} />
+          <Books
+            products={kitapyurduProducts}
+            loading={kitapyurduLoading}
+            sortOption={tabsSortOption}
+            setSortOption={setTabsSortOption}
+          />
         </Tab>
         <Tab eventKey="Trendyol" title={`Trendyol`}>
-          <Books products={trendyolProducts} loading={trendyolLoading} />
+          <Books
+            products={trendyolProducts}
+            loading={trendyolLoading}
+            sortOption={tabsSortOption}
+            setSortOption={setTabsSortOption}
+          />
         </Tab>
         <Tab eventKey="Hepsiburada" title={`Hepsiburada`}>
-          <Books products={hepsiburadaProducts} loading={hepsiburadaLoading} />
+          <Books
+            products={hepsiburadaProducts}
+            loading={hepsiburadaLoading}
+            sortOption={tabsSortOption}
+            setSortOption={setTabsSortOption}
+          />
         </Tab>
         <Tab eventKey="Amazon" title={`Amazon`}>
-          <Books products={amazonProducts} loading={amazonLoading} />
+          <Books
+            products={amazonProducts}
+            loading={amazonLoading}
+            sortOption={tabsSortOption}
+            setSortOption={setTabsSortOption}
+          />
         </Tab>
         <Tab eventKey="Dr" title={`D&R`}>
-          <Books products={drProducts} loading={drLoading} />
+          <Books
+            products={drProducts}
+            loading={drLoading}
+            sortOption={tabsSortOption}
+            setSortOption={setTabsSortOption}
+          />
         </Tab>
       </Tabs>
     </div>

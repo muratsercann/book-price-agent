@@ -1,23 +1,25 @@
 import React, { useState, useMemo } from "react";
 import { Table, Form, Row, Col, Spinner } from "react-bootstrap";
 
-export default function Books({ products, loading, source = "" }) {
+export default function Books({
+  products,
+  loading,
+  sortOption,
+  setSortOption,
+}) {
   const [selectedAuthor, setSelectedAuthor] = useState("");
   const [selectedPublisher, setSelectedPublisher] = useState("");
-  const [sortOption, setSortOption] = useState("recommended"); // Varsayılan sıralama
 
   if (loading && selectedAuthor !== "") {
     setSelectedAuthor("");
-    console.log("clear selectedAuthor ");
   }
 
   if (loading && selectedPublisher !== "") {
     setSelectedPublisher("");
-    console.log("clear selectedPublisher ");
   }
 
-  if (loading && sortOption !== "recommended") {
-    setSortOption("recommended");
+  if (loading && sortOption !== "descending") {
+    setSortOption("descending");
   }
 
   const stores = {
@@ -48,15 +50,15 @@ export default function Books({ products, loading, source = "" }) {
     },
   };
 
+  const clearFilters = () => {
+    setSelectedAuthor("");
+    setSelectedPublisher("");
+    setSortOption("descending");
+  };
+
   const handleClearFilters = (event) => {
-    event.preventDefault(); // Linkin varsayılan davranışını engelle
-
-    setSelectedAuthor(""); // Yazar filtresini temizle
-    setSelectedPublisher(""); // Yayıncı filtresini temizle
-    setSortOption("recommended"); // Varsayılan sıralama seçeneğine döndür
-
-    // Ürünleri yeniden göster (opsiyonel)
-    // setProducts(originalProducts); // Eğer filtrelenmiş ürünleri saklıyorsanız
+    event.preventDefault();
+    clearFilters();
   };
   // Filtreleme ve sıralama fonksiyonu
   const filteredAndSortedProducts = useMemo(() => {
