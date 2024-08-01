@@ -6,7 +6,7 @@ const selectors = {
   waitSelector: ".search-page",
   productsContainer: "#product-table",
   product: ".product-cr",
-  title: ".name span",
+  title: [".name span"],
   price: ".price-new .value",
   link: ".pr-img-link",
   author: ".author span",

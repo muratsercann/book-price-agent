@@ -5,7 +5,7 @@ const selectors = {
   waitSelector: ".s-main-slot.s-result-list.s-search-results.sg-row",
   productsContainer: ".s-search-results",
   product: '[data-component-type="s-search-result"]',
-  title: '[data-cy="title-recipe"]',
+  title: ['[data-cy="title-recipe"]'],
   price: '[data-cy="price-recipe"] .a-price-whole',
   link: '[data-cy="title-recipe"] h2 a',
   author: ".no-author-info",

@@ -8,7 +8,7 @@ const selectors = {
   waitSelector: ".content-wrapper",
   productsContainer: 'ul[class^="productListContent"]',
   product: 'li[class^="productListContent"]',
-  title: '[data-test-id="product-card-name"]',
+  title: ['[data-test-id="product-card-name"]'],
   price: '[data-test-id="price-current-price"]',
   link: "a",
   author: ".no-author-info",

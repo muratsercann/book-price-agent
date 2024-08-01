@@ -1,34 +1,41 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import SearchForm from "./components/SearchForm";
-import Kitapyurdu from "./components/Kitapyurdu";
-import Hepsiburada from "./components/Hepsiburada";
-import Trendyol from "./components/Trendyol";
 import { Tab, Tabs } from "react-bootstrap";
 import "./App.css";
-import Amazon from "./components/Amazon";
-import Dr from "./components/Dr";
 import * as utils from "./utils.js";
-import { all } from "axios";
 import Books from "./components/Books.js";
-import { IoBookSharp } from "react-icons/io5";
-import { TbWorldSearch } from "react-icons/tb";
 import { ImBooks } from "react-icons/im";
 import TableSvg from "./TableSvg.js";
 function App() {
-  const [query, setQuery] = useState("");
   const [key, setKey] = useState("All");
-  const [sortOption, setSortOption] = useState("recommended");
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [kitapyurduLoading, setKitapyurduLoading] = useState(false);
+  const [trendyolLoading, setTrendyolLoading] = useState(false);
+  const [hepsiburadaLoading, setHepsiburadaLoading] = useState(false);
+  const [amazonLoading, setAmazonLoading] = useState(false);
+  const [drLoading, setDrLoading] = useState(false);
+
+  const [kitapyurduProducts, setKitapyurduProducts] = useState([]);
+  const [trendyolProducts, setTrendyolProducts] = useState([]);
+  const [hepsiburadaProducts, setHepsiburadaProducts] = useState([]);
+  const [amazonProducts, setAmazonProducts] = useState([]);
+  const [drProducts, setDrProducts] = useState([]);
 
   const handleSearch = async (searchText, sortOption) => {
-    // setQuery(searchText);
-    // setSortOption(sortOption);
-    // API çağrılarını paralel olarak başlatın
-    setLoading(true);
-    setProducts([]);
     console.log("sort option : " + sortOption);
     console.log("fetching producs...");
+
+    setKitapyurduLoading(true);
+    setTrendyolLoading(true);
+    setHepsiburadaLoading(true);
+    setAmazonLoading(true);
+    setDrLoading(true);
+
+    setKitapyurduProducts([]);
+    setTrendyolProducts([]);
+    setHepsiburadaProducts([]);
+    setAmazonProducts([]);
+    setDrProducts([]);
+
     const kitapyurduPromise = utils.getKitapYurduProducts(
       searchText,
       sortOption
@@ -42,88 +49,54 @@ function App() {
     );
 
     try {
-      const [
-        kitapyurduResponse,
-        trendyolResponse,
-        amazonResponse,
-        drResponse,
-        hepsiburadaResponse,
-      ] = await Promise.all([
+      const handleResponse = async (
+        responsePromise,
+        setProductsFn,
+        setLoadingFn
+      ) => {
+        try {
+          const response = await responsePromise;
+          if (response.ok && response.data.length > 0) {
+            console.log(`${setProductsFn.name} count: ${response.data.length}`);
+            setProductsFn(response.data);
+            setLoadingFn(false);
+          }
+        } catch (error) {
+          console.error(`Error handling response:`, error);
+        }
+      };
+
+      handleResponse(
         kitapyurduPromise,
-        trendyolPromise,
-        amazonPromise,
-        drPromise,
+        setKitapyurduProducts,
+        setKitapyurduLoading
+      );
+      handleResponse(trendyolPromise, setTrendyolProducts, setTrendyolLoading);
+      handleResponse(amazonPromise, setAmazonProducts, setAmazonLoading);
+      handleResponse(drPromise, setDrProducts, setDrLoading);
+      handleResponse(
         hepsiburadaPromise,
-      ]);
-
-      let allProducts = [];
-
-      if (kitapyurduResponse.ok && kitapyurduResponse.data.length > 0) {
-        console.log(
-          "kitapyurduResponse count : ",
-          kitapyurduResponse.data.length
-        );
-        allProducts.push(...kitapyurduResponse.data);
-      }
-
-      if (trendyolResponse.ok && trendyolResponse.data.length > 0) {
-        console.log("trendyolResponse  count : ", trendyolResponse.data.length);
-        allProducts.push(...trendyolResponse.data);
-      }
-
-      if (amazonResponse.ok && amazonResponse.data.length > 0) {
-        console.log("amazonResponse  count : ", amazonResponse.data.length);
-        allProducts.push(...amazonResponse.data);
-      }
-
-      if (drResponse.ok && drResponse.data.length > 0) {
-        console.log("drResponse  count : ", drResponse.data.length);
-        allProducts.push(...drResponse.data);
-      }
-
-      if (hepsiburadaResponse.ok && hepsiburadaResponse.data.length > 0) {
-        console.log(
-          "hepsiburadaResponse  count : ",
-          hepsiburadaResponse.data.length
-        );
-        allProducts.push(...hepsiburadaResponse.data);
-      }
-
-      if (allProducts.length > 0) {
-        setProducts(allProducts);
-      }
-
-      setLoading(false);
-      console.log("all products : ", allProducts);
+        setHepsiburadaProducts,
+        setHepsiburadaLoading
+      );
     } catch (error) {
       console.error("API çağrılarında bir hata oluştu:", error);
     }
   };
 
-  const stores = useMemo(
-    () => ({
-      kitapyurdu: "kitapyurdu",
-      trendyol: "trendyol",
-      hepsiburada: "hepsiburada",
-      amazon: "amazon",
-      dr: "dr",
-    }),
-    []
-  );
-
-  useEffect(() => {
-    if (products.length === 0) return;
-    console.log("products changed..");
-    console.log("products count : ", products.length);
-  }, [products]);
-
-  const filterProducts = (storeName) => {
-    if (products.length === 0) return [];
-
-    const result = products.filter((product) => product.store === storeName);
-
-    return result;
+  const stores = {
+    kitapyurdu: "kitapyurdu",
+    trendyol: "trendyol",
+    hepsiburada: "hepsiburada",
+    amazon: "amazon",
+    dr: "dr",
   };
+
+  // useEffect(() => {
+  //   if (products.length === 0) return;
+  //   console.log("products changed..");
+  //   console.log("products count : ", products.length);
+  // }, [products]);
 
   const parsePrice = (priceString) => {
     const price = priceString
@@ -135,18 +108,6 @@ function App() {
     const result = parseFloat(price);
     return result;
   };
-
-  const books = useMemo(
-    () => ({
-      all: products,
-      kitapyurdu: products.filter((p) => p.store === stores.kitapyurdu),
-      trendyol: products.filter((p) => p.store === stores.trendyol),
-      hepsiburada: products.filter((p) => p.store === stores.hepsiburada),
-      amazon: products.filter((p) => p.store === stores.amazon),
-      dr: products.filter((p) => p.store === stores.dr),
-    }),
-    [products, stores]
-  );
 
   useLayoutEffect(() => {
     const allTab = document.querySelector("#controlled-tab-example-tab-All");
@@ -164,62 +125,69 @@ function App() {
     );
     const drTab = document.querySelector("#controlled-tab-example-tab-Dr");
 
+    const allProductsLength =
+      kitapyurduProducts.length +
+      trendyolProducts.length +
+      hepsiburadaProducts.length +
+      amazonProducts.length +
+      drProducts.length;
+
     if (allTab.querySelectorAll(".item-count").length === 0) {
       const newElement = document.createElement("span");
-      newElement.textContent = books.all.length;
+      newElement.textContent = allProductsLength;
       newElement.className = "item-count";
       allTab.appendChild(newElement);
     } else {
-      allTab.querySelectorAll(".item-count")[0].textContent = books.all.length;
+      allTab.querySelectorAll(".item-count")[0].textContent = allProductsLength;
     }
 
     if (kitapyurduTab.querySelectorAll(".item-count").length === 0) {
       const newElement = document.createElement("span");
-      newElement.textContent = books.kitapyurdu.length;
+      newElement.textContent = kitapyurduProducts.length;
       newElement.className = "item-count";
       kitapyurduTab.appendChild(newElement);
     } else {
       kitapyurduTab.querySelectorAll(".item-count")[0].textContent =
-        books.kitapyurdu.length;
+        kitapyurduProducts.length;
     }
 
     if (trendyolTab.querySelectorAll(".item-count").length === 0) {
       const newElement = document.createElement("span");
-      newElement.textContent = books.trendyol.length;
+      newElement.textContent = trendyolProducts.length;
       newElement.className = "item-count";
       trendyolTab.appendChild(newElement);
     } else {
       trendyolTab.querySelectorAll(".item-count")[0].textContent =
-        books.trendyol.length;
+        trendyolProducts.length;
     }
 
     if (hepsiburadaTab.querySelectorAll(".item-count").length === 0) {
       const newElement = document.createElement("span");
-      newElement.textContent = books.hepsiburada.length;
+      newElement.textContent = hepsiburadaProducts.length;
       newElement.className = "item-count";
       hepsiburadaTab.appendChild(newElement);
     } else {
       hepsiburadaTab.querySelectorAll(".item-count")[0].textContent =
-        books.hepsiburada.length;
+        hepsiburadaProducts.length;
     }
 
     if (amazonTab.querySelectorAll(".item-count").length === 0) {
       const newElement = document.createElement("span");
-      newElement.textContent = books.amazon.length;
+      newElement.textContent = amazonProducts.length;
       newElement.className = "item-count";
       amazonTab.appendChild(newElement);
     } else {
       amazonTab.querySelectorAll(".item-count")[0].textContent =
-        books.amazon.length;
+        amazonProducts.length;
     }
 
     if (drTab.querySelectorAll(".item-count").length === 0) {
       const newElement = document.createElement("span");
-      newElement.textContent = books.dr.length;
+      newElement.textContent = drProducts.length;
       newElement.className = "item-count";
       drTab.appendChild(newElement);
     } else {
-      drTab.querySelectorAll(".item-count")[0].textContent = books.dr.length;
+      drTab.querySelectorAll(".item-count")[0].textContent = drProducts.length;
     }
 
     const tabSpanList = document.querySelectorAll("span.item-count");
@@ -233,7 +201,14 @@ function App() {
         }
       });
     }
-  }, [books]);
+  }, [
+    kitapyurduProducts,
+    trendyolProducts,
+    hepsiburadaProducts,
+    amazonProducts,
+    drProducts,
+  ]);
+
   return (
     <div className="App">
       <div className="header" style={{ height: "250px" }}>
@@ -264,22 +239,38 @@ function App() {
         fill
       >
         <Tab eventKey="All" title={`Tümü`}>
-          <Books products={books.all} loading={loading} />
+          <Books
+            products={[
+              ...kitapyurduProducts,
+              ...trendyolProducts,
+              ...hepsiburadaProducts,
+              ...amazonProducts,
+              ...drProducts,
+            ]}
+            loading={
+              kitapyurduLoading ||
+              trendyolLoading ||
+              hepsiburadaLoading ||
+              amazonLoading ||
+              drLoading
+            }
+            source="all"
+          />
         </Tab>
         <Tab eventKey="Kitapyurdu" title={`Kitapyurdu`}>
-          <Books products={books.hepsiburada} loading={loading} />
+          <Books products={kitapyurduProducts} loading={kitapyurduLoading} />
         </Tab>
         <Tab eventKey="Trendyol" title={`Trendyol`}>
-          <Books products={books.trendyol} loading={loading} />
+          <Books products={trendyolProducts} loading={trendyolLoading} />
         </Tab>
         <Tab eventKey="Hepsiburada" title={`Hepsiburada`}>
-          <Books products={books.hepsiburada} loading={loading} />
+          <Books products={hepsiburadaProducts} loading={hepsiburadaLoading} />
         </Tab>
         <Tab eventKey="Amazon" title={`Amazon`}>
-          <Books products={books.amazon} loading={loading} />
+          <Books products={amazonProducts} loading={amazonLoading} />
         </Tab>
         <Tab eventKey="Dr" title={`D&R`}>
-          <Books products={books.dr} loading={loading} />
+          <Books products={drProducts} loading={drLoading} />
         </Tab>
       </Tabs>
     </div>

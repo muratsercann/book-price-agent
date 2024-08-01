@@ -7,7 +7,7 @@ const selectors = {
   waitSelector: "#search-app",
   productsContainer: ".prdct-cntnr-wrppr",
   product: ".p-card-wrppr",
-  title: ".prdct-desc-cntnr-name",
+  title: [".prdct-desc-cntnr-name", ".product-desc-sub-text"],
   price: ".prc-box-dscntd",
   link: "a",
   author: ".no-author-info",

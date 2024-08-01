@@ -59,9 +59,14 @@ async function getProducts(page, selectors) {
     }
 
     const getProduct = (el) => {
-      const title = (
-        el.querySelector(selectors.title)?.textContent || "-"
+      let title = (
+        el.querySelector(selectors.title[0])?.textContent || ""
       ).trim();
+
+      if (selectors.title.length > 1) {
+        title += el.querySelector(selectors.title[1])?.textContent || "";
+      }
+
       let price = (
         el.querySelector(selectors.price)?.textContent || "-"
       ).trim();
