@@ -169,6 +169,11 @@ function App() {
     hepsiburadaProducts,
     amazonProducts,
     drProducts,
+    amazonLoading,
+    drLoading,
+    trendyolLoading,
+    kitapyurduLoading,
+    hepsiburadaLoading,
   ]);
 
   return (

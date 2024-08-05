@@ -52,7 +52,7 @@ router.get("/amazon", async (req, res) => {
 
 router.get("/dr", async (req, res) => {
   const { query, sortOption } = req.query || {};
-  const result = await dr.search(query, sortOption);
+  const result = await dr.fastSearch(query, sortOption);
   if (result.ok) {
     res.status(200).json({ data: result.data });
   } else {
