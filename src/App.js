@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import SearchForm from "./components/SearchForm";
 import { Spinner, Tab, Tabs } from "react-bootstrap";
 import "./App.css";
@@ -21,7 +21,7 @@ function App() {
   const [hepsiburadaProducts, setHepsiburadaProducts] = useState([]);
   const [amazonProducts, setAmazonProducts] = useState([]);
   const [drProducts, setDrProducts] = useState([]);
-
+  const [showButton, setShowButton] = useState(false);
   const handleSearch = async (searchText, sortOption) => {
     console.log("sort option : " + sortOption);
     console.log("fetching producs...");
@@ -176,6 +176,32 @@ function App() {
     hepsiburadaLoading,
   ]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      // Sayfa 300 piksel aşağı kaydığında buton görünür olacak
+      if (window.scrollY > 300) {
+        setShowButton(true);
+      } else {
+        setShowButton(false);
+      }
+    };
+
+    // Scroll eventini dinle
+    window.addEventListener("scroll", handleScroll);
+
+    // Cleanup event listener
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <div className="App">
       <div className="header" style={{ height: "250px" }}>
@@ -266,6 +292,14 @@ function App() {
           />
         </Tab>
       </Tabs>
+
+      <div>
+        {showButton && (
+          <button onClick={scrollToTop} className="scroll-to-top-button">
+            ↑ Yukarı Çık
+          </button>
+        )}
+      </div>
     </div>
   );
 }
