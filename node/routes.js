@@ -9,7 +9,7 @@ const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 puppeteer.use(StealthPlugin());
 const { executablePath } = require("puppeteer");
-
+const path = require("path");
 const mainService = require("./services/main");
 
 router.get("/", async (req, res) => {
@@ -18,19 +18,17 @@ router.get("/", async (req, res) => {
 
 router.get("/check", async (req, res) => {
   const url = "https://bot.sannysoft.com/";
-  const browser = await puppeteer.launch({
-    headless: true,
-    executablePath: executablePath(),
-  });
+  const browser = await createBrowser();
+
   try {
     const page = await browser.newPage();
     await page.goto(url);
     await page.screenshot({ path: "both.jpg" });
+    const screenshotPath = path.join(__dirname, "both.jpg");
+    res.sendFile(screenshotPath);
   } finally {
     if (browser) browser.close();
   }
-
-  res.status(200).json({ message: "Server is running :)" });
 });
 
 async function createBrowser() {
@@ -42,8 +40,8 @@ async function createBrowser() {
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
-      "--disable-gpu",
-      "--disable-software-rasterizer",
+      // "--disable-gpu",
+      // "--disable-software-rasterizer",
     ],
   });
 
