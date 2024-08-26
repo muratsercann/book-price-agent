@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
   res.status(200).json({ message: "Server is running :)" });
 });
 
-router.get("/check", async (req, res) => {
+router.get("/botcheck", async (req, res) => {
   const url = "https://bot.sannysoft.com/";
   const browser = await createBrowser();
 

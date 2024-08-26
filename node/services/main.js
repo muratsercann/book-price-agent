@@ -7,15 +7,15 @@ module.exports = { search, search_2 };
 
 async function startBrowser() {
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     userDataDir:
       "C:\\Users\\murat\\AppData\\Local\\Google\\Chrome\\User Data\\Default", // Bu yol genellikle doğru
     executablePath: executablePath(),
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
-      "--disable-gpu",
-      "--disable-software-rasterizer",
+      // "--disable-gpu",
+      // "--disable-software-rasterizer",
     ],
   });
 
