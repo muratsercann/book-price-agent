@@ -1,8 +1,6 @@
-const mainService = require("./main");
 const cheerio = require("cheerio");
 const axios = require("axios");
-
-module.exports = { search };
+const mainService = require("./main");
 
 const selectors = {
   waitSelector: ".content-wrapper",
@@ -19,6 +17,7 @@ const store = "hepsiburada";
 const storeBaseUrl = "https://www.hepsiburada.com";
 
 async function search(searchText, sortOption) {
+  const startTime = Date.now();
   try {
     let sortQuery = "";
     if (sortOption === "highPrice") {
@@ -58,13 +57,9 @@ async function search(searchText, sortOption) {
     productList.each((index, el) => {
       const store = "hepsiburada";
 
-      const title = (
-        $(el).find('[data-test-id="product-card-name"]').text() || "-"
-      ).trim();
+      const title = ($(el).find(selectors.title).text() || "-").trim();
 
-      let price = (
-        $(el).find('[data-test-id="price-current-price"]').text() || "-"
-      ).trim();
+      let price = ($(el).find(selectors.price).text() || "-").trim();
 
       if (price !== "-") {
         price = price.replace("TL", "").replace(/\s+/g, ""); // .replaceAll() eski Node.js sürümlerinde çalışmayabilir
@@ -78,8 +73,6 @@ async function search(searchText, sortOption) {
       const imageString = ($(el).find("noscript").text() || "").trim();
       const srcMatch = imageString.match(/src="([^"]+)"/);
       const imageSrc = srcMatch ? srcMatch[1] : "";
-
-      const arr = searchText?.split(" ") || [];
 
       if (price !== "-") {
         results.push({
@@ -99,7 +92,7 @@ async function search(searchText, sortOption) {
       `${store} - Kitap bilgileri alındı. Toplam : ${results?.length} kitap`
     );
     console.log(
-      `İşlem Bitiş : ${time.toLocaleDateString()} ${time.toLocaleTimeString()}`
+      `${store} işlem bitiş : ${time.toLocaleDateString()} ${time.toLocaleTimeString()}`
     );
     console.log(`--------------------------------------`);
 
@@ -107,5 +100,35 @@ async function search(searchText, sortOption) {
   } catch (error) {
     console.error("Error fetching data:", error.stack);
     return { ok: false, error: { message: error.message, stack: error.stack } };
+  } finally {
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    console.log(`### ${store} işlem süresi: ${duration} ms`);
   }
 }
+async function search2(searchText, sortOption) {
+  let startTime = Date.now();
+  try {
+    let sortQuery = "";
+    if (sortOption === "highPrice") {
+      sortQuery = "&siralama=azalanfiyat";
+    }
+
+    const url = `https://www.hepsiburada.com/ara?q=${encodeURIComponent(
+      searchText
+    )}${sortQuery}`;
+
+    let products = await mainService.search(url, store, selectors);
+
+    return { ok: true, data: products };
+  } catch (error) {
+    console.error("Error fetching data:", error.stack);
+    return { ok: false, error: { message: error.message, stack: error.stack } };
+  } finally {
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    console.log(`### ${store} işlem süresi: ${duration} ms`);
+  }
+}
+
+module.exports = { search, search2, selectors, store, storeBaseUrl };

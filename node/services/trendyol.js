@@ -1,7 +1,6 @@
 const cheerio = require("cheerio");
 const axios = require("axios");
 const mainService = require("./main");
-module.exports = { search, fastSearch };
 
 const selectors = {
   waitSelector: "#search-app",
@@ -17,20 +16,24 @@ const selectors = {
 const store = "trendyol";
 const storeBaseUrl = "https://www.trendyol.com";
 
+function createUrl(searchText, sortOption) {
+  let sortQuery = "";
+  if (sortOption === "highPrice") {
+    sortQuery = "&sst=PRICE_BY_DESC";
+  }
+
+  const url = `https://www.trendyol.com/sr?q=${encodeURIComponent(
+    searchText
+  )}&qt=${encodeURIComponent(searchText)}&st=${encodeURIComponent(
+    searchText
+  )}&os=1&pi=1${sortQuery}`;
+
+  return url;
+}
 async function search(searchText, sortOption) {
   try {
-    let sortQuery = "";
-    if (sortOption === "highPrice") {
-      sortQuery = "&sst=PRICE_BY_DESC";
-    }
-
-    const url = `https://www.trendyol.com/sr?q=${encodeURIComponent(
-      searchText
-    )}&qt=${encodeURIComponent(searchText)}&st=${encodeURIComponent(
-      searchText
-    )}&os=1&pi=1${sortQuery}`;
-
-    let products = await mainService.genericSearch(url, store, selectors);
+    const url = createUrl(searchText, sortOption);
+    let products = await mainService.search(url, store, selectors);
 
     products = products.map((p) => ({
       ...p,
@@ -105,8 +108,6 @@ async function fastSearch(searchText, sortOption) {
       const publisher = "---";
       const imageSrc = ($(el).find(selectors.image).attr("src") || "").trim();
 
-      const arr = searchText?.split(" ") || [];
-
       if (price !== "") {
         results.push({
           store,
@@ -125,7 +126,7 @@ async function fastSearch(searchText, sortOption) {
       `${store} - Kitap bilgileri alındı. Toplam : ${results?.length} kitap`
     );
     console.log(
-      `İşlem Bitiş : ${time.toLocaleDateString()} ${time.toLocaleTimeString()}`
+      `${store}  işlem bitiş : ${time.toLocaleDateString()} ${time.toLocaleTimeString()}`
     );
     console.log(`--------------------------------------`);
 
@@ -135,3 +136,11 @@ async function fastSearch(searchText, sortOption) {
     return { ok: false, error: { message: error.message, stack: error.stack } };
   }
 }
+module.exports = {
+  search,
+  fastSearch,
+  selectors,
+  createUrl,
+  store,
+  storeBaseUrl,
+};

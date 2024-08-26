@@ -13,7 +13,7 @@ async function getPageHtml(url, selector = null) {
 
   if (selector) {
     //todo msercan : check if not found...
-    await page.waitForSelector(selector, { timeout: 30000 });
+    await page.waitForSelector(selector, { timeout: 60000 });
   }
   // await page.goto(url, { waitUntil: "networkidle2", timeout: 2000 });
   await page.setViewport({ width: 1080, height: 1024 });

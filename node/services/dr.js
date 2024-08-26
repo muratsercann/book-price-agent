@@ -1,8 +1,6 @@
 const puppeteer = require("puppeteer");
 const axios = require("axios");
 const cheerio = require("cheerio");
-const mainService = require("./main");
-module.exports = { search, fastSearch };
 
 const selectors = {
   waitSelector: "div.facet__products .prd.js-prd-item",
@@ -19,6 +17,7 @@ const store = "dr";
 const storeBaseUrl = "https://www.dr.com.tr/";
 
 async function search(searchText, sortOption) {
+  const startTime = Date.now();
   try {
     let sortQuery = "";
     if (sortOption === "highPrice") {
@@ -40,15 +39,19 @@ async function search(searchText, sortOption) {
   } catch (error) {
     console.error("Error fetching data:", error.stack);
     return { ok: false, error: { message: error.message, stack: error.stack } };
+  } finally {
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    console.log(`### ${store} işlem süresi: ${duration} ms`);
   }
 }
 
 async function searchDr(url, storeName, selectors) {
-  let time = new Date();
+  const startTime = new Date();
 
   console.log(`--------------------------------------`);
   console.log(
-    `İşlem Başlangıç : ${time.toLocaleDateString()} ${time.toLocaleTimeString()}`
+    `İşlem Başlangıç : ${startTime.toLocaleDateString()} ${startTime.toLocaleTimeString()}`
   );
   console.log("mağaza : " + storeName);
   console.log("url oluşturuldu : ", url);
@@ -64,7 +67,7 @@ async function searchDr(url, storeName, selectors) {
 
   if (selectors.waitSelector) {
     //todo msercan : check if not found...
-    await page.waitForSelector(selectors.waitSelector, { timeout: 90000 });
+    await page.waitForSelector(selectors.waitSelector, { timeout: 60000 });
   }
   await page.setViewport({ width: 1080, height: 1024 });
 
@@ -77,12 +80,12 @@ async function searchDr(url, storeName, selectors) {
 
   await browser.close();
 
-  time = new Date();
+  const endTime = new Date();
   console.log(
     `${store} - Kitap bilgileri alındı. Toplam : ${products?.length} kitap`
   );
   console.log(
-    `İşlem Bitiş : ${time.toLocaleDateString()} ${time.toLocaleTimeString()}`
+    `${store} işlem bitiş : ${endTime.toLocaleDateString()} ${startTime.toLocaleTimeString()}`
   );
   console.log(`--------------------------------------`);
 
@@ -141,16 +144,22 @@ async function getProducts(page, selectors) {
   return products;
 }
 
-async function fastSearch(searchText, sortOption) {
-  try {
-    let sortQuery = "";
-    if (sortOption === "highPrice") {
-      sortQuery = "&SortOrder=1&SortType=2";
-    }
+function createUrl(searchText, sortOption) {
+  let sortQuery = "";
+  if (sortOption === "highPrice") {
+    sortQuery = "&SortOrder=1&SortType=2";
+  }
 
-    const url = `https://www.dr.com.tr/search?q=${encodeURIComponent(
-      searchText
-    )}&redirect=search${sortQuery}`;
+  const url = `https://www.dr.com.tr/search?q=${encodeURIComponent(
+    searchText
+  )}&redirect=search${sortQuery}`;
+  return url;
+}
+
+async function fastSearch(searchText, sortOption) {
+  const startTime = Date.now();
+  try {
+    const url = createUrl(searchText, sortOption);
 
     let time = new Date();
     console.log(`--------------------------------------`);
@@ -243,5 +252,10 @@ async function fastSearch(searchText, sortOption) {
   } catch (error) {
     console.error("Error fetching data:", error.stack);
     return { ok: false, error: { message: error.message, stack: error.stack } };
+  } finally {
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    console.log(`### ${store} işlem süresi: ${duration} ms`);
   }
 }
+module.exports = { search, fastSearch, selectors, store, storeBaseUrl };

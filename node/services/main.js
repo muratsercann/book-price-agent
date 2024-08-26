@@ -1,53 +1,136 @@
-const puppeteer = require("puppeteer");
-module.exports = { genericSearch };
+const puppeteer = require("puppeteer-extra");
+const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+puppeteer.use(StealthPlugin());
+const { executablePath } = require("puppeteer");
 
-async function genericSearch(url, storeName, selectors) {
-  let time = new Date();
+module.exports = { search, search_2 };
+
+async function startBrowser() {
+  const browser = await puppeteer.launch({
+    headless: true,
+    userDataDir:
+      "C:\\Users\\murat\\AppData\\Local\\Google\\Chrome\\User Data\\Default", // Bu yol genellikle doğru
+    executablePath: executablePath(),
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-gpu",
+      "--disable-software-rasterizer",
+    ],
+  });
+
+  return browser;
+}
+
+async function search(url, storeName, selectors) {
+  let startTime = new Date();
 
   console.log(`--------------------------------------`);
   console.log(
-    `İşlem Başlangıç : ${time.toLocaleDateString()} ${time.toLocaleTimeString()}`
+    `İşlem Başlangıç : ${startTime.toLocaleDateString()} ${startTime.toLocaleTimeString()}`
   );
-  console.log("mağaza : " + storeName);
-  console.log("url oluşturuldu : ", url);
-  console.log("url'den veri çekiliyor...");
+  console.log(`Mağaza : ${storeName}`);
+  console.log(`URL Oluşturuldu : ${url}`);
+  console.log(`URL'den veri çekiliyor...`);
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"], // Sandbox özelliğini kapalı
-  });
+  let browser;
+  for (let i = 0; i < 50; i++) {
+    try {
+      browser = await startBrowser();
+      break;
+    } catch (error) {
+      await delay(50);
+      continue;
+    }
+  }
 
   const page = await browser.newPage();
 
-  await page.goto(url, { waitUntil: "domcontentloaded", timeout: 90000 });
+  try {
+    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 90000 });
 
-  if (selectors.waitSelector) {
-    //todo msercan : check if not found...
-    await page.waitForSelector(selectors.waitSelector, { timeout: 30000 });
+    if (selectors.waitSelector) {
+      await page.waitForSelector(selectors.waitSelector, { timeout: 60000 });
+    }
+
+    await page.setViewport({ width: 1080, height: 1024 });
+
+    let products = await getProducts(page, selectors);
+
+    products = products.filter((p) => p.price !== "");
+    products = products.map((p) => ({
+      ...p,
+      store: storeName,
+    }));
+
+    const endTime = new Date();
+    console.log(
+      `${storeName} - Kitap bilgileri alındı. Toplam : ${products.length} kitap`
+    );
+    console.log(
+      `İşlem Bitiş : ${endTime.toLocaleDateString()} ${endTime.toLocaleTimeString()}`
+    );
+    console.log(`--------------------------------------`);
+
+    return products;
+  } catch (error) {
+    console.error(`Hata oluştu: ${error.message}`);
+    return []; // Hata durumunda boş bir dizi döndürmek iyi olabilir.
+  } finally {
+    await browser.close();
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    console.log(`### ${storeName} işlem süresi: ${duration} ms`);
   }
+}
 
-  await page.setViewport({ width: 1080, height: 1024 });
+async function search_2(page, url, storeName, selectors) {
+  const startTime = new Date();
 
-  let products = await getProducts(page, selectors);
-
-  products = products.filter((p) => p.price !== "");
-  products = products.map((p) => ({
-    ...p,
-    store: storeName,
-  }));
-
-  await browser.close();
-
-  time = new Date();
-  console.log(
-    `${storeName} - Kitap bilgileri alındı. Toplam : ${products?.length} kitap`
-  );
-  console.log(
-    `İşlem Bitiş : ${time.toLocaleDateString()} ${time.toLocaleTimeString()}`
-  );
   console.log(`--------------------------------------`);
+  console.log(
+    `İşlem Başlangıç : ${startTime.toLocaleDateString()} ${startTime.toLocaleTimeString()}`
+  );
+  console.log(`Mağaza : ${storeName}`);
+  console.log(`URL Oluşturuldu : ${url}`);
+  console.log(`URL'den veri çekiliyor...`);
 
-  return products;
+  try {
+    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 90000 });
+
+    if (selectors.waitSelector) {
+      await page.waitForSelector(selectors.waitSelector, { timeout: 60000 });
+    }
+
+    await page.setViewport({ width: 1080, height: 1024 });
+
+    let products = await getProducts(page, selectors);
+
+    products = products.filter((p) => p.price !== "");
+    products = products.map((p) => ({
+      ...p,
+      store: storeName,
+    }));
+
+    const endTime = new Date();
+    console.log(
+      `${storeName} - Kitap bilgileri alındı. Toplam : ${products.length} kitap`
+    );
+    console.log(
+      `İşlem Bitiş : ${endTime.toLocaleDateString()} ${startTime.toLocaleTimeString()}`
+    );
+    console.log(`--------------------------------------`);
+
+    return products;
+  } catch (error) {
+    console.error(`Hata oluştu: ${error.message}`);
+    return []; // Hata durumunda boş bir dizi döndürmek iyi olabilir.
+  } finally {
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    console.log(`### ${storeName} işlem süresi: ${duration} ms`);
+  }
 }
 
 async function getProducts(page, selectors) {

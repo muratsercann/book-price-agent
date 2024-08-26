@@ -1,7 +1,6 @@
 const mainService = require("./main");
 const axios = require("axios");
 const cheerio = require("cheerio");
-module.exports = { search };
 
 const selectors = {
   waitSelector: ".s-main-slot.s-result-list.s-search-results.sg-row",
@@ -19,20 +18,27 @@ const selectors = {
 };
 const store = "amazon";
 const storeBaseUrl = "https://www.amazon.com.tr";
+
+function createUrl(searchText, sortOption) {
+  let sortQuery = "";
+  let ref = "nb_sb_noss";
+  if (sortOption === "highPrice") {
+    sortQuery = "&s=price-desc-rank";
+    ref = "sr_st_price-desc-rank";
+  }
+
+  const url = `https://www.amazon.com.tr/s?k=${encodeURIComponent(
+    searchText
+  )}&ref=${ref}${sortQuery}`;
+
+  return url;
+}
+
 async function search(searchText, sortOption) {
   try {
-    let sortQuery = "";
-    let ref = "nb_sb_noss";
-    if (sortOption === "highPrice") {
-      sortQuery = "&s=price-desc-rank";
-      ref = "sr_st_price-desc-rank";
-    }
+    const url = createUrl(searchText, sortOption);
 
-    const url = `https://www.amazon.com.tr/s?k=${encodeURIComponent(
-      searchText
-    )}&ref=${ref}${sortQuery}`;
-
-    let products = await mainService.genericSearch(url, store, selectors);
+    let products = await mainService.search(url, store, selectors);
     products = products.map((p) => ({
       ...p,
       link: `${storeBaseUrl}${p.link}`,
@@ -141,7 +147,7 @@ async function fastSearch(searchText, sortOption) {
       `${store} - Kitap bilgileri alındı. Toplam : ${results?.length} kitap`
     );
     console.log(
-      `İşlem Bitiş : ${time.toLocaleDateString()} ${time.toLocaleTimeString()}`
+      `${store} işlem bitiş : ${time.toLocaleDateString()} ${time.toLocaleTimeString()}`
     );
     console.log(`--------------------------------------`);
 
@@ -151,3 +157,5 @@ async function fastSearch(searchText, sortOption) {
     return { ok: false, error: { message: error.message, stack: error.stack } };
   }
 }
+
+module.exports = { search, selectors, createUrl, store, storeBaseUrl };
