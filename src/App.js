@@ -210,7 +210,7 @@ function App() {
         </div>
         <div style={{ fontSize: "53px" }}>
           <ImBooks color="rgb(165 38 62)" />
-          <span style={{ marginLeft: "20px" }}>Kitap Arama</span>
+          <span style={{ marginLeft: "20px" }}>En Uygun Kitap</span>
         </div>
         <div className="filter mb-5">
           <SearchForm onSearch={handleSearch} />
