@@ -28,10 +28,10 @@ function createUrl(searchText, sortOption) {
   return url;
 }
 
-async function search(searchText, sortOption) {
+async function search(searchText, sortOption, browser) {
   try {
     const url = createUrl(searchText, sortOption);
-    let products = await mainService.search(url, store, selectors);
+    let products = await mainService.search(url, store, selectors, browser);
     return { ok: true, data: products };
   } catch (error) {
     console.error("Error fetching data:", error.stack);

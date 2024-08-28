@@ -34,11 +34,11 @@ function createUrl(searchText, sortOption) {
   return url;
 }
 
-async function search(searchText, sortOption) {
+async function search(searchText, sortOption, browser) {
   try {
     const url = createUrl(searchText, sortOption);
 
-    let products = await mainService.search(url, store, selectors);
+    let products = await mainService.search(url, store, selectors, browser);
     products = products.map((p) => ({
       ...p,
       link: `${storeBaseUrl}${p.link}`,

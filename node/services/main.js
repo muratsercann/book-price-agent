@@ -22,7 +22,7 @@ async function startBrowser() {
   return browser;
 }
 
-async function search(url, storeName, selectors) {
+async function search(url, storeName, selectors, browser) {
   let startTime = new Date();
 
   console.log(`--------------------------------------`);
@@ -32,18 +32,6 @@ async function search(url, storeName, selectors) {
   console.log(`Mağaza : ${storeName}`);
   console.log(`URL Oluşturuldu : ${url}`);
   console.log(`URL'den veri çekiliyor...`);
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-  let browser;
-  for (let i = 0; i < 50; i++) {
-    try {
-      browser = await startBrowser();
-      break;
-    } catch (error) {
-      await delay(50);
-      continue;
-    }
-  }
 
   const page = await browser.newPage();
 
@@ -73,12 +61,12 @@ async function search(url, storeName, selectors) {
     );
     console.log(`--------------------------------------`);
 
+    await page.close();
     return products;
   } catch (error) {
     console.error(`Hata oluştu: ${error.message}`);
     return []; // Hata durumunda boş bir dizi döndürmek iyi olabilir.
   } finally {
-    await browser.close();
     const endTime = Date.now();
     const duration = endTime - startTime;
     console.log(`### ${storeName} işlem süresi: ${duration} ms`);

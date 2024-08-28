@@ -12,6 +12,7 @@ const { executablePath } = require("puppeteer");
 const path = require("path");
 const mainService = require("./services/main");
 const axios = require("axios");
+const { getBrowser } = require("./browserService");
 
 router.get("/", async (req, res) => {
   res.status(200).json({ message: "Server is running :)" });
@@ -34,7 +35,7 @@ router.get("/botcheck", async (req, res) => {
 
 async function createBrowser() {
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     userDataDir:
       "C:\\Users\\murat\\AppData\\Local\\Google\\Chrome\\User Data\\Default",
     executablePath: executablePath(),
@@ -208,7 +209,8 @@ router.get("/all", async (req, res) => {
 
 router.get("/kitapyurdu", async (req, res) => {
   const { query, sortOption } = req.query || {};
-  const result = await kitapyurdu.search(query, sortOption);
+  const browser = await getBrowser();
+  const result = await kitapyurdu.search(query, sortOption, browser);
   if (result.ok) {
     res.status(200).json({ data: result.data });
   } else {
@@ -218,7 +220,8 @@ router.get("/kitapyurdu", async (req, res) => {
 
 router.get("/trendyol", async (req, res) => {
   const { query, sortOption } = req.query || {};
-  const result = await trendyol.search(query, sortOption);
+  const browser = await getBrowser();
+  const result = await trendyol.search(query, sortOption, browser);
   if (result.ok) {
     res.status(200).json({ data: result.data });
   } else {
@@ -238,7 +241,8 @@ router.get("/hepsiburada", async (req, res) => {
 
 router.get("/amazon", async (req, res) => {
   const { query, sortOption } = req.query || {};
-  const result = await amazon.search(query, sortOption);
+  const browser = await getBrowser();
+  const result = await amazon.search(query, sortOption, browser);
   if (result.ok) {
     res.status(200).json({ data: result.data });
   } else {
