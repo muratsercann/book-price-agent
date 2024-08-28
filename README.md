@@ -27,6 +27,11 @@
 - **Backend:** Node.js
 - **Web Scraping:** Puppeteer
 
+## Screenshot
+
+![image](https://github.com/user-attachments/assets/2598f31a-7539-489f-b09c-48b8c8e86473)
+
+
 
 
 
