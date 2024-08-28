@@ -11,7 +11,6 @@ puppeteer.use(StealthPlugin());
 const { executablePath } = require("puppeteer");
 const path = require("path");
 const mainService = require("./services/main");
-const axios = require("axios");
 
 router.get("/", async (req, res) => {
   res.status(200).json({ message: "Server is running :)" });
@@ -48,51 +47,6 @@ async function createBrowser() {
 
   return browser;
 }
-
-router.get("/kitapyurdu2", async (req, res) => {
-  const kitapyurdu_api = async () => {
-    const url = `http://localhost:5002/api/fetch/kitapyurdu?query=K%C3%BCrk%20Mantolu%20Madonna`;
-    const response = await axios.get(url);
-    return response.data;
-  };
-  const [result] = await Promise.all([kitapyurdu_api()]);
-
-  const { query, sortOption } = req.query || {};
-  res.status(200).json({ data: result.data });
-});
-const kitapyurdu_api = async () => {
-  const url = `http://localhost:5002/api/fetch/kitapyurdu?query=K%C3%BCrk%20Mantolu%20Madonna`;
-  const response = await axios.get(url);
-  return response.data;
-};
-router.get("/parallel", async (req, res) => {
-  const startTime = Date.now();
-
-  const { query, sortOption } = req.query || {};
-
-  let browser;
-  try {
-    browser = await createBrowser();
-    browser.close();
-    // const kitapyurdu_prd = await kitapyurdu_api();
-
-    const [kitapyurdu_prd] = await Promise.all([kitapyurdu_api()]);
-
-    res.status(200).json({
-      products: {
-        kitapyurdu: kitapyurdu_prd.data,
-      },
-    });
-  } catch (error) {
-    res.status(200).json({ error: error.stack });
-  } finally {
-    if (browser) await browser.close();
-
-    const endTime = Date.now();
-    const duration = endTime - startTime;
-    console.log(`\n\n### Toplam işlem süresi: ${duration} ms ###\n\n`);
-  }
-});
 
 router.get("/test", async (req, res) => {
   const startTime = Date.now();
