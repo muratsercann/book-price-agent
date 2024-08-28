@@ -29,7 +29,9 @@
 
 ## Screenshot
 
-![image](https://github.com/user-attachments/assets/2598f31a-7539-489f-b09c-48b8c8e86473)
+![image](https://github.com/user-attachments/assets/a649d5e6-e208-445d-b15c-9548f3bcb450)
+
+
 
 
 
