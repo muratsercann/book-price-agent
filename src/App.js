@@ -255,6 +255,15 @@ function App() {
             searchPerformed={searchPerformed}
           />
         </Tab>
+        <Tab eventKey="Hepsiburada" title={`Hepsiburada`}>
+          <Books
+            products={hepsiburadaProducts}
+            loading={hepsiburadaLoading}
+            sortOption={tabsSortOption}
+            setSortOption={setTabsSortOption}
+            searchPerformed={searchPerformed}
+          />
+        </Tab>
         <Tab eventKey="Trendyol" title={`Trendyol`}>
           <Books
             products={trendyolProducts}

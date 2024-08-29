@@ -50,7 +50,6 @@ async function getBrowser() {
     }
   }
 
-  // Tarayıcı kapalıysa yeni bir tane oluştur
   if (browser && (await isBrowserClosed())) {
     console.log("Tarayıcı kapalı, yeni bir tane oluşturuluyor...");
     isLocked = true; // Yeni tarayıcı oluşturulmaya başlıyor
@@ -61,7 +60,6 @@ async function getBrowser() {
   return browser;
 }
 
-// Tarayıcının açık olup olmadığını kontrol eden yardımcı fonksiyon
 async function isBrowserClosed() {
   try {
     const pages = await browser.pages();
