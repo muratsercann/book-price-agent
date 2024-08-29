@@ -2,18 +2,20 @@ const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 puppeteer.use(StealthPlugin());
 const { executablePath } = require("puppeteer");
+const os = require("os");
+require("dotenv").config();
 
 let browser = null;
 let browserPromise = null;
 let isLocked = false; // Kilit değişkeni
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const username = os.userInfo().username;
 
 async function createBrowser() {
   try {
     return await puppeteer.launch({
-      headless: true,
-      userDataDir:
-        "C:\\Users\\murat\\AppData\\Local\\Google\\Chrome\\User Data\\Default",
+      headless: process.env.HEADLESS === "true",
+      userDataDir: `C:\\Users\\${username}\\AppData\\Local\\Google\\Chrome\\User Data\\Default`,
       executablePath: executablePath(),
       args: [
         "--no-sandbox",

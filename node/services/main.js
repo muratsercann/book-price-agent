@@ -2,14 +2,15 @@ const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 puppeteer.use(StealthPlugin());
 const { executablePath } = require("puppeteer");
+const os = require("os");
+require("dotenv").config();
 
 module.exports = { search, search_2 };
-
+const username = os.userInfo().username;
 async function startBrowser() {
   const browser = await puppeteer.launch({
-    headless: false,
-    userDataDir:
-      "C:\\Users\\murat\\AppData\\Local\\Google\\Chrome\\User Data\\Default", // Bu yol genellikle doğru
+    headless: process.env.HEADLESS === "true",
+    userDataDir: `C:\\Users\\${username}\\AppData\\Local\\Google\\Chrome\\User Data\\Default`,
     executablePath: executablePath(),
     args: [
       "--no-sandbox",

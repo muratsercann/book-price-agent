@@ -13,7 +13,8 @@ const path = require("path");
 const mainService = require("./services/main");
 const axios = require("axios");
 const { getBrowser } = require("./browserService");
-
+const os = require("os");
+require("dotenv").config();
 router.get("/", async (req, res) => {
   res.status(200).json({ message: "Server is running :)" });
 });
@@ -32,12 +33,11 @@ router.get("/botcheck", async (req, res) => {
     if (browser) browser.close();
   }
 });
-
+const username = os.userInfo().username;
 async function createBrowser() {
   const browser = await puppeteer.launch({
-    headless: true,
-    userDataDir:
-      "C:\\Users\\murat\\AppData\\Local\\Google\\Chrome\\User Data\\Default",
+    headless: process.env.HEADLESS === "true",
+    userDataDir: `C:\\Users\\${username}\\AppData\\Local\\Google\\Chrome\\User Data\\Default`,
     executablePath: executablePath(),
     args: [
       "--no-sandbox",
