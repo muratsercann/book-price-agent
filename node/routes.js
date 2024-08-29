@@ -210,7 +210,11 @@ router.get("/all", async (req, res) => {
 router.get("/kitapyurdu", async (req, res) => {
   const { query, sortOption } = req.query || {};
   const browser = await getBrowser();
-  const result = await kitapyurdu.search(query, sortOption, browser);
+  const result = await kitapyurdu.search(
+    query.substring(0, 50),
+    sortOption,
+    browser
+  );
   if (result.ok) {
     res.status(200).json({ data: result.data });
   } else {
@@ -221,7 +225,11 @@ router.get("/kitapyurdu", async (req, res) => {
 router.get("/trendyol", async (req, res) => {
   const { query, sortOption } = req.query || {};
   const browser = await getBrowser();
-  const result = await trendyol.search(query, sortOption, browser);
+  const result = await trendyol.search(
+    query.substring(0, 50),
+    sortOption,
+    browser
+  );
   if (result.ok) {
     res.status(200).json({ data: result.data });
   } else {
@@ -231,7 +239,7 @@ router.get("/trendyol", async (req, res) => {
 
 router.get("/hepsiburada", async (req, res) => {
   const { query, sortOption } = req.query || {};
-  const result = await hepsiburada.search(query, sortOption);
+  const result = await hepsiburada.search(query.substring(0, 90), sortOption);
   if (result.ok) {
     res.status(200).json({ data: result.data });
   } else {
@@ -242,7 +250,11 @@ router.get("/hepsiburada", async (req, res) => {
 router.get("/amazon", async (req, res) => {
   const { query, sortOption } = req.query || {};
   const browser = await getBrowser();
-  const result = await amazon.search(query, sortOption, browser);
+  const result = await amazon.search(
+    query.substring(0, 90),
+    sortOption,
+    browser
+  );
   if (result.ok) {
     res.status(200).json({ data: result.data });
   } else {
@@ -252,7 +264,7 @@ router.get("/amazon", async (req, res) => {
 
 router.get("/dr", async (req, res) => {
   const { query, sortOption } = req.query || {};
-  const result = await dr.fastSearch(query, sortOption);
+  const result = await dr.fastSearch(query.substring(0, 50), sortOption);
   if (result.ok) {
     res.status(200).json({ data: result.data });
   } else {

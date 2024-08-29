@@ -273,15 +273,6 @@ function App() {
             searchPerformed={searchPerformed}
           />
         </Tab>
-        <Tab eventKey="Hepsiburada" title={`Hepsiburada`}>
-          <Books
-            products={hepsiburadaProducts}
-            loading={hepsiburadaLoading}
-            sortOption={tabsSortOption}
-            setSortOption={setTabsSortOption}
-            searchPerformed={searchPerformed}
-          />
-        </Tab>
         <Tab eventKey="Amazon" title={`Amazon`}>
           <Books
             products={amazonProducts}
